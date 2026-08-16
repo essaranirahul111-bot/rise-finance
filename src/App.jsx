@@ -1068,16 +1068,18 @@ function ResearchPage() {
       author: "Rahul Kumar",
       date: "July 2026",
       abstract:
-        "Examines why financial literacy is almost entirely absent from Pakistani youth education, tracing the gap to both school curricula and household financial habits. The paper documents the real-world consequences — debt vulnerability, poor savings behavior, susceptibility to scams — and proposes concrete interventions, including grassroots workshops and accessible digital tools, several of which directly shaped the design of this app.",
+        "Examines why financial literacy remains largely absent from Pakistani school curricula despite multiple policy initiatives, identifying five structural drivers — curricular gaps, socio-economic disparity, cultural silence around money, gender inequality, and limited program reach. The paper documents real consequences including reliance on informal lending and vulnerability to fraud, then proposes a three-tier reform strategy: curriculum integration, school-based financial practice, and embedded digital tools — including a conceptual framework for an AI-assisted financial decision aid that directly shaped this app.",
       topics: ["Financial literacy", "Youth finance", "Pakistan's financial ecosystem"],
+      file: "/teen-financial-illiteracy-pakistan.pdf",
     },
     {
-      title: "Stablecoins and Rupee Volatility: A Study on Pakistan's Currency Landscape",
+      title: "Stablecoins & the Rupee: How Digital Dollars Behave When a Currency Depreciates — A Pakistan Case Study",
       author: "Rahul Kumar",
       date: "August 2026",
       abstract:
-        "Explores how stablecoins could function as a practical hedge against rupee volatility for everyday Pakistanis, particularly those without easy access to foreign currency accounts. The paper weighs the accessibility benefits against regulatory and adoption barriers, situating the analysis within Pakistan's broader fintech and monetary landscape.",
+        "Examines how stablecoins behave as the rupee depreciates, drawing on comparative evidence from Venezuela and India to show that stablecoin 'premiums' widen during both currency crises and regulatory supply shocks — functioning as a real-time gauge of liquidity access rather than pure sentiment. Applies this framework to Pakistan's emerging stablecoin and CBDC landscape, arguing the dominant use case is financial inclusion and remittance-cost reduction rather than speculation, and outlines policy implications for capturing those benefits safely.",
       topics: ["FinTech", "Stablecoins", "Digital currencies"],
+      file: "/stablecoins-rupee-pakistan.pdf",
     },
   ];
 
@@ -1101,20 +1103,21 @@ function ResearchPage() {
             </div>
 
             <div className="flex flex-wrap gap-3 mt-5">
-              <button
-                disabled
-                title="Upload the PDF to enable this"
-                className="text-xs px-3 py-2 rounded-lg border border-[#00E28A]/40 text-[#5CFFB0] opacity-50 cursor-not-allowed flex items-center gap-2"
+              <a
+                href={p.file}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs px-3 py-2 rounded-lg border border-[#00E28A]/40 text-[#5CFFB0] hover:bg-[#0E3B27]/30 flex items-center gap-2"
               >
                 Read Research <ArrowRight size={13} />
-              </button>
-              <button
-                disabled
-                title="Upload the PDF to enable this"
-                className="text-xs px-3 py-2 rounded-lg border border-[#1E211C] text-[#7C867E] opacity-50 cursor-not-allowed flex items-center gap-2"
+              </a>
+              <a
+                href={p.file}
+                download
+                className="text-xs px-3 py-2 rounded-lg border border-[#1E211C] text-[#9AA39C] hover:border-[#00E28A]/40 hover:text-[#5CFFB0] flex items-center gap-2"
               >
                 Download PDF
-              </button>
+              </a>
             </div>
           </div>
         ))}
@@ -1125,11 +1128,6 @@ function ResearchPage() {
         <div className="flex flex-wrap gap-2">
           {allTopics.map((t) => <Pill key={t} tone="accent">{t}</Pill>)}
         </div>
-      </div>
-
-      <div className="mt-6 flex items-start gap-2 text-xs text-[#7C867E] bg-[#0E100E] border border-[#1E211C] rounded-lg p-4">
-        <ShieldAlert size={14} className="mt-0.5 shrink-0" />
-        PDF links activate once the papers are uploaded.
       </div>
     </div>
   );
