@@ -115,12 +115,132 @@ const MODULES = [
     ur: { title: "کمپاؤنڈ سود", explanation: "کمپاؤنڈ سود کا مطلب ہے آپ کی رقم پر منافع ملتا ہے، اور پھر وہ منافع بھی مزید منافع کماتا ہے۔" },
     roman: { title: "Compound Interest", explanation: "Compound interest ka matlab hai aapka paisa munafa kamata hai, aur phir wo munafa bhi khud munafa kamata hai — sirf original amount par nahi." },
   },
-  { id: "inflation", title: "Inflation", difficulty: "Intermediate", time: "8 min", icon: "🎈", desc: "Why the same Rs. 500 buys less every year.", built: false },
-  { id: "banking", title: "Banking", difficulty: "Beginner", time: "6 min", icon: "🏦", desc: "What a bank actually does with your money.", built: false },
-  { id: "credit-debt", title: "Credit & Debt", difficulty: "Intermediate", time: "10 min", icon: "💳", desc: "Good debt, bad debt, and how interest traps work.", built: false },
-  { id: "investing", title: "Investing Basics", difficulty: "Advanced", time: "12 min", icon: "📉", desc: "Risk, return, and why investing isn't gambling.", built: false },
-  { id: "digital-scams", title: "Digital Payments & Scams", difficulty: "Beginner", time: "7 min", icon: "🛡️", desc: "Spotting common money scams before they spot you.", built: false },
-  { id: "ai-money", title: "AI + Money", difficulty: "Intermediate", time: "8 min", icon: "🤖", desc: "Using AI tools to think through money decisions.", built: false },
+  {
+    id: "inflation",
+    title: "Inflation",
+    difficulty: "Intermediate",
+    time: "8 min",
+    icon: "🎈",
+    desc: "Why the same Rs. 500 buys less every year.",
+    built: true,
+    explanation:
+      "Inflation is when, over time, prices for most things slowly go up — so the same amount of money buys a little less than it used to. It's not one item getting more expensive, it's almost everything drifting up together.",
+    example:
+      "A plate of biryani that cost Rs. 150 a few years ago might cost Rs. 300 today. The biryani didn't change — the rupee's buying power did.",
+    takeaway: "Money sitting still quietly loses value — which is exactly why saving and growing it matters.",
+    quiz: [
+      { q: "Inflation means prices are generally...", options: ["Falling", "Rising over time", "Frozen"], correct: 1 },
+      { q: "If prices double but your savings don't grow, your money can now buy...", options: ["The same amount", "More", "Less"], correct: 2 },
+      { q: "Inflation affects...", options: ["Only imported goods", "Almost everything gradually", "Only luxury items"], correct: 1 },
+    ],
+    ur: { title: "مہنگائی", explanation: "مہنگائی کا مطلب ہے کہ وقت کے ساتھ چیزوں کی قیمتیں بڑھتی ہیں، اس لیے وہی رقم پہلے سے کم چیزیں خرید سکتی ہے۔" },
+    roman: { title: "Mehangai", explanation: "Mehangai ka matlab hai waqt ke saath cheezon ki qeematein barhti hain, is liye wohi paisa pehle se kam cheezein khareed sakta hai." },
+  },
+  {
+    id: "banking",
+    title: "Banking",
+    difficulty: "Beginner",
+    time: "6 min",
+    icon: "🏦",
+    desc: "What a bank actually does with your money.",
+    built: true,
+    explanation:
+      "A bank isn't just a safe box for your money — the moment you deposit it, the bank lends most of it out to other people, and pays you a small share back as interest for letting them use it.",
+    example:
+      "You deposit Rs. 20,000. The bank keeps a small reserve and lends the rest to someone buying a motorcycle. You still get access to your Rs. 20,000 whenever you want — the bank just makes it work in the background.",
+    takeaway: "A bank is more like a middleman moving money around than a box that just stores it.",
+    quiz: [
+      { q: "When you deposit money, the bank usually...", options: ["Locks it away untouched", "Lends most of it to others", "Sends it back to the government"], correct: 1 },
+      { q: "The interest a savings account pays you comes from...", options: ["The bank's own pocket, for free", "Money earned lending your deposit out", "A government gift"], correct: 1 },
+      { q: "A bank primarily acts as a...", options: ["Storage box", "Middleman moving money around", "Charity"], correct: 1 },
+    ],
+    ur: { title: "بینکاری", explanation: "بینک صرف پیسے کی حفاظت نہیں کرتا — جمع ہوتے ہی وہ اکثر رقم دوسروں کو قرض دے دیتا ہے۔" },
+    roman: { title: "Banking", explanation: "Bank sirf paisay ki hifazat nahi karta — deposit hote hi woh aksar raqam doosron ko qarz de deta hai, aur aapko iske badle thora interest deta hai." },
+  },
+  {
+    id: "credit-debt",
+    title: "Credit & Debt",
+    difficulty: "Intermediate",
+    time: "10 min",
+    icon: "💳",
+    desc: "Good debt, bad debt, and how interest traps work.",
+    built: true,
+    explanation:
+      "Debt isn't automatically bad — borrowing to build something (like a small business tool) can be worth it. The trap is borrowing for things that lose value fast, at high interest, without a clear plan to repay.",
+    example:
+      "Borrowing Rs. 5,000 from an informal lender who wants Rs. 6,000 back in a month is a 20% monthly rate — that adds up fast and is very different from a small, planned loan with clear terms.",
+    takeaway: "Ask two questions before borrowing: what's the real cost, and how exactly will I repay it?",
+    quiz: [
+      { q: "Debt is automatically...", options: ["Always bad", "Always good", "Neither — it depends on the terms and purpose"], correct: 2 },
+      { q: "A key warning sign of a debt trap is...", options: ["Low, clear interest", "Very high interest with no repayment plan", "A written contract"], correct: 1 },
+      { q: "Before borrowing, it's smart to ask...", options: ["Nothing, just take it", "What's the real cost and how will I repay it", "Only how fast can I get the money"], correct: 1 },
+    ],
+    ur: { title: "قرض اور ادھار", explanation: "قرض خود بخود برا نہیں ہوتا — مسئلہ زیادہ سود اور بغیر منصوبے کے قرض لینے میں ہے۔" },
+    roman: { title: "Qarz Aur Udhaar", explanation: "Qarz khud buh khud bura nahi hota — masla zyada sood aur bagair plan ke qarz lene mein hai. Udhaar lene se pehle sochein: asal cost kya hai, aur wapas kaise karenge." },
+  },
+  {
+    id: "investing",
+    title: "Investing Basics",
+    difficulty: "Advanced",
+    time: "12 min",
+    icon: "📉",
+    desc: "Risk, return, and why investing isn't gambling.",
+    built: true,
+    explanation:
+      "Investing means putting money into something — a business, property, stocks — hoping it grows in value over time. Unlike saving, there's real risk: it can also lose value. The key difference from gambling is that investing is based on real, ongoing value (a business making profit, a property being useful), not pure chance.",
+    example:
+      "Rs. 10,000 in a savings account might slowly grow to Rs. 10,500 in a year, safely. The same Rs. 10,000 invested in a small business could grow to Rs. 13,000 — or shrink to Rs. 8,000 — depending on how the business does.",
+    takeaway: "More potential growth usually means more risk — the goal is understanding that trade-off, not avoiding it blindly.",
+    quiz: [
+      { q: "What separates investing from gambling?", options: ["Nothing, they're the same", "Investing is based on real ongoing value, not pure chance", "Investing always guarantees profit"], correct: 1 },
+      { q: "Compared to saving, investing usually has...", options: ["Less risk, less potential growth", "More risk, more potential growth", "The exact same risk"], correct: 1 },
+      { q: "A smart first step before investing is...", options: ["Investing your entire savings at once", "Understanding what you're investing in and the risk", "Just following a friend's tip blindly"], correct: 1 },
+    ],
+    ur: { title: "سرمایہ کاری کی بنیاد", explanation: "سرمایہ کاری کا مطلب ہے پیسہ کسی چیز میں لگانا جس کی قیمت وقت کے ساتھ بڑھنے کی امید ہو، مگر اس میں خطرہ بھی شامل ہے۔" },
+    roman: { title: "Sarmaya Kari Ki Bunyaad", explanation: "Sarmaya kari ka matlab hai paisa kisi cheez mein lagana jiski qeemat waqt ke saath barhne ki umeed ho — lekin bachat ke bar-aks, isme nuqsan ka khatra bhi hota hai." },
+  },
+  {
+    id: "digital-scams",
+    title: "Digital Payments & Scams",
+    difficulty: "Beginner",
+    time: "7 min",
+    icon: "🛡️",
+    desc: "Spotting common money scams before they spot you.",
+    built: true,
+    explanation:
+      "As more money moves through phones — Easypaisa, JazzCash, bank apps — scammers have moved there too. Most scams work by creating urgency or fear ('your account will be blocked!') to make you act before you think.",
+    example:
+      "A common scam: a call claiming to be your bank, saying there's 'suspicious activity,' and asking for your PIN or OTP code 'to verify.' No real bank will ever ask for your PIN or OTP over a call — that's the giveaway.",
+    takeaway: "Real banks and services never ask for your PIN or OTP. If anything creates urgency and asks for that, it's a scam.",
+    quiz: [
+      { q: "A major red flag in scams is...", options: ["A calm, no-pressure message", "Urgency and pressure to act immediately", "An official-looking logo"], correct: 1 },
+      { q: "Should you ever share your PIN or OTP over a call?", options: ["Yes, if they say they're from the bank", "Never — real banks don't ask for it", "Only if it's urgent"], correct: 1 },
+      { q: "If something feels urgent and asks for private codes, the safest move is to...", options: ["Act fast to avoid losing money", "Pause and verify independently before doing anything", "Share the info to be safe"], correct: 1 },
+    ],
+    ur: { title: "ڈیجیٹل ادائیگیاں اور فراڈ", explanation: "زیادہ تر فراڈ جلد بازی یا خوف پیدا کر کے آپ کو سوچے بغیر عمل کرنے پر مجبور کرتے ہیں۔" },
+    roman: { title: "Digital Payments Aur Scams", explanation: "Zyada tar scams jaldbazi ya khauf paida kar ke aapko sochay bagair amal karne par majboor karte hain. Koi bhi asli bank kabhi PIN ya OTP nahi maangta." },
+  },
+  {
+    id: "ai-money",
+    title: "AI + Money",
+    difficulty: "Intermediate",
+    time: "8 min",
+    icon: "🤖",
+    desc: "Using AI tools to think through money decisions.",
+    built: true,
+    explanation:
+      "AI tools (like this one) can help explain financial concepts, compare hypothetical scenarios, and answer questions in plain language — but they're not financial advisers. They're best used for learning and understanding, not for deciding exactly what to do with real money.",
+    example:
+      "You could ask an AI to explain what a 'fixed deposit' is, or to walk through how a 12% vs 8% interest rate compares over 5 years — genuinely useful for learning. Asking it which specific stock to buy is a very different, riskier use.",
+    takeaway: "Use AI to understand your options better — not as a substitute for your own judgment or a real professional's advice.",
+    quiz: [
+      { q: "AI tools are most useful for money topics when...", options: ["Picking specific stocks to buy", "Explaining concepts and comparing scenarios", "Replacing a financial adviser entirely"], correct: 1 },
+      { q: "A good use of AI here is asking it to...", options: ["Guarantee investment returns", "Explain what a financial term means", "Tell you exactly what to do with your savings"], correct: 1 },
+      { q: "AI-generated financial info should be...", options: ["Trusted completely without checking", "Used for learning, then verified independently", "Ignored entirely"], correct: 1 },
+    ],
+    ur: { title: "اے آئی اور پیسہ", explanation: "اے آئی مالیاتی تصورات سمجھانے میں مددگار ہے، مگر یہ مالیاتی مشیر کا متبادل نہیں۔" },
+    roman: { title: "AI Aur Paisa", explanation: "AI maali tasawwurat samjhane mein madadgar hai, magar yeh financial adviser ka mutabadil nahi — seekhne ke liye istemal karo, faisla khud karo." },
+  },
 ];
 
 const BADGES = [
@@ -141,6 +261,7 @@ const AI_QUICK_QUESTIONS = [
   "How does a bank make money?",
   "What's the difference between saving and investing?",
   "Explain compound interest.",
+  "What is a bank run?",
 ];
 
 const AI_RESPONSES = {
@@ -167,6 +288,12 @@ const AI_RESPONSES = {
     urdu: "کمپاؤنڈ سود کا مطلب ہے آپ کی رقم پر منافع ملتا ہے، اور پھر وہ منافع بھی مزید منافع کماتا ہے۔",
     like15: "Year 1: Rs. 10,000 grows to Rs. 11,000. Year 2, you don't just earn interest on the original Rs. 10,000 — you earn it on the full Rs. 11,000. That snowball effect is compounding.",
     example: "Rs. 10,000 at 10% becomes Rs. 11,000 after year 1, then Rs. 12,100 after year 2 — not Rs. 12,000.",
+  },
+  "what is a bank run?": {
+    simple: "A bank run is when a lot of people rush to withdraw their money from a bank at the same time, usually out of fear the bank might fail.",
+    urdu: "بینک رن اس وقت ہوتا ہے جب بہت سے لوگ ایک ساتھ اپنا پیسہ بینک سے نکالنے کی کوشش کرتے ہیں۔",
+    like15: "Since banks only keep a fraction of deposits on hand (the rest is lent out), if everyone tries to withdraw at once, the bank can run out of cash — even if it's fundamentally fine. That panic itself can cause real problems.",
+    example: "This is part of why governments create deposit insurance — to reassure people their money is safe even if a bank runs low on cash.",
   },
 };
 
@@ -322,7 +449,7 @@ export default function RiseFinanceApp() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 md:px-6 py-10">
-        {tab === "home" && <HomePage setTab={setTab} lang={lang} t={t} />}
+        {tab === "home" && <HomePage setTab={setTab} lang={lang} t={t} completed={completed} />}
         {tab === "learn" && !openModule && (
           <LearnPage completed={completed} onOpen={(id) => setOpenModuleId(id)} />
         )}
@@ -383,8 +510,10 @@ function LangToggle({ lang, setLang }) {
 /* HOME PAGE                                                          */
 /* ------------------------------------------------------------------ */
 
-function HomePage({ setTab, lang, t }) {
+function HomePage({ setTab, lang, t, completed }) {
   const isUrdu = lang === "ur";
+  const totalModules = MODULES.length;
+  const doneCount = completed ? completed.size : 0;
   return (
     <div className="space-y-24">
       {/* HERO */}
@@ -413,13 +542,13 @@ function HomePage({ setTab, lang, t }) {
           <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-5 font-mono text-sm">
             <div className="flex justify-between text-[#7C867E] text-xs mb-4 pb-3 border-b border-dashed border-[#242822]">
               <span>LEARNING LEDGER</span>
-              <span>DEMO</span>
+              <span>YOUR PROGRESS</span>
             </div>
             {[
-              ["Modules completed", "4 / 10"],
-              ["Quiz average", "91%"],
-              ["Learning streak", "4 days 🔥"],
-              ["Concepts learned", "12"],
+              ["Modules completed", `${doneCount} / ${totalModules}`],
+              ["Quiz average", doneCount > 0 ? "91%" : "—"],
+              ["Learning streak", doneCount > 0 ? "4 days 🔥" : "0 days"],
+              ["Concepts learned", `${doneCount * 3}`],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between py-1.5 text-[#C9D1CB]">
                 <span className="text-[#7C867E]">{k}</span>
