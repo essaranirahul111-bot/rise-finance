@@ -306,7 +306,7 @@ const DEFAULT_AI_RESPONSE = {
 
 const UI_TEXT = {
   en: {
-    nav: { home: "Home", learn: "Learn", ai: "AI Tutor", challenges: "Challenges", progress: "Progress", about: "About" },
+    nav: { home: "Home", learn: "Learn", ai: "AI Tutor", challenges: "Challenges", progress: "Progress", research: "Research", about: "About" },
     heroTag: "Built for Pakistani youth",
     heroTitle: ["Understand Money.", "Build Your", "Future."],
     heroSub: "RI$E makes financial literacy simple, practical, and built for the next generation.",
@@ -314,7 +314,7 @@ const UI_TEXT = {
     ctaAi: "Try RI$E AI",
   },
   ur: {
-    nav: { home: "ہوم", learn: "سیکھیں", ai: "اے آئی ٹیوٹر", challenges: "چیلنجز", progress: "پیش رفت", about: "تعارف" },
+    nav: { home: "ہوم", learn: "سیکھیں", ai: "اے آئی ٹیوٹر", challenges: "چیلنجز", progress: "پیش رفت", research: "تحقیق", about: "تعارف" },
     heroTag: "پاکستانی نوجوانوں کے لیے",
     heroTitle: ["پیسے کو سمجھیں۔", "اپنا", "مستقبل بنائیں۔"],
     heroSub: "RI$E مالیاتی تعلیم کو آسان، عملی اور نئی نسل کے لیے قابلِ فہم بناتا ہے۔",
@@ -322,7 +322,7 @@ const UI_TEXT = {
     ctaAi: "RI$E AI آزمائیں",
   },
   roman: {
-    nav: { home: "Home", learn: "Seekhein", ai: "AI Tutor", challenges: "Challenges", progress: "Progress", about: "Tafseel" },
+    nav: { home: "Home", learn: "Seekhein", ai: "AI Tutor", challenges: "Challenges", progress: "Progress", research: "Research", about: "Tafseel" },
     heroTag: "Pakistani nojawano ke liye",
     heroTitle: ["Paisay Ko Samjhein.", "Apna", "Mustaqbil Banayein."],
     heroSub: "RI$E maali taleem ko asaan, amali aur nai nasal ke liye samajhne laiq banata hai.",
@@ -391,6 +391,7 @@ export default function RiseFinanceApp() {
   const navItems = [
     { id: "home", label: t.nav.home, icon: Home },
     { id: "learn", label: t.nav.learn, icon: BookOpen },
+    { id: "research", label: t.nav.research, icon: Landmark },
     { id: "ai", label: t.nav.ai, icon: Bot },
     { id: "challenges", label: t.nav.challenges, icon: Trophy },
     { id: "progress", label: t.nav.progress, icon: TrendingUp },
@@ -465,6 +466,7 @@ export default function RiseFinanceApp() {
         {tab === "ai" && <AiTutorPage lang={lang} />}
         {tab === "challenges" && <ChallengesPage />}
         {tab === "progress" && <ProgressPage completed={completed} streak={streak} />}
+        {tab === "research" && <ResearchPage />}
         {tab === "about" && <AboutPage />}
       </main>
 
@@ -1058,6 +1060,80 @@ function Row({ label, value }) {
 /* ------------------------------------------------------------------ */
 /* ABOUT PAGE                                                         */
 /* ------------------------------------------------------------------ */
+
+function ResearchPage() {
+  const papers = [
+    {
+      title: "Teen Financial Illiteracy in Pakistan: Causes, Consequences, and Pathways to Reform",
+      author: "Rahul Kumar",
+      date: "July 2026",
+      abstract:
+        "Examines why financial literacy is almost entirely absent from Pakistani youth education, tracing the gap to both school curricula and household financial habits. The paper documents the real-world consequences — debt vulnerability, poor savings behavior, susceptibility to scams — and proposes concrete interventions, including grassroots workshops and accessible digital tools, several of which directly shaped the design of this app.",
+      topics: ["Financial literacy", "Youth finance", "Pakistan's financial ecosystem"],
+    },
+    {
+      title: "Stablecoins and Rupee Volatility: A Study on Pakistan's Currency Landscape",
+      author: "Rahul Kumar",
+      date: "August 2026",
+      abstract:
+        "Explores how stablecoins could function as a practical hedge against rupee volatility for everyday Pakistanis, particularly those without easy access to foreign currency accounts. The paper weighs the accessibility benefits against regulatory and adoption barriers, situating the analysis within Pakistan's broader fintech and monetary landscape.",
+      topics: ["FinTech", "Stablecoins", "Digital currencies"],
+    },
+  ];
+
+  const allTopics = ["Financial literacy", "FinTech", "Stablecoins", "Digital currencies", "Youth finance", "Pakistan's financial ecosystem"];
+
+  return (
+    <div className="max-w-2xl">
+      <SectionLabel>Research</SectionLabel>
+      <h2 className="text-3xl font-black tracking-tight mb-2">The research behind RI$E</h2>
+      <p className="text-[#9AA39C] mb-8">Original research exploring financial literacy, fintech, and the future of money.</p>
+
+      <div className="space-y-5">
+        {papers.map((p) => (
+          <div key={p.title} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-6">
+            <h3 className="font-semibold text-lg leading-snug">{p.title}</h3>
+            <p className="text-xs text-[#7C867E] mt-2">{p.author} · {p.date}</p>
+            <p className="text-sm text-[#C9D1CB] leading-relaxed mt-4">{p.abstract}</p>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+              {p.topics.map((t) => <Pill key={t}>{t}</Pill>)}
+            </div>
+
+            <div className="flex flex-wrap gap-3 mt-5">
+              <button
+                disabled
+                title="Upload the PDF to enable this"
+                className="text-xs px-3 py-2 rounded-lg border border-[#00E28A]/40 text-[#5CFFB0] opacity-50 cursor-not-allowed flex items-center gap-2"
+              >
+                Read Research <ArrowRight size={13} />
+              </button>
+              <button
+                disabled
+                title="Upload the PDF to enable this"
+                className="text-xs px-3 py-2 rounded-lg border border-[#1E211C] text-[#7C867E] opacity-50 cursor-not-allowed flex items-center gap-2"
+              >
+                Download PDF
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8">
+        <SectionLabel>Research topics</SectionLabel>
+        <div className="flex flex-wrap gap-2">
+          {allTopics.map((t) => <Pill key={t} tone="accent">{t}</Pill>)}
+        </div>
+      </div>
+
+      <div className="mt-6 flex items-start gap-2 text-xs text-[#7C867E] bg-[#0E100E] border border-[#1E211C] rounded-lg p-4">
+        <ShieldAlert size={14} className="mt-0.5 shrink-0" />
+        PDF links activate once the papers are uploaded.
+      </div>
+    </div>
+  );
+}
 
 function AboutPage() {
   return (
