@@ -23,9 +23,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "A 'question' string is required" });
   }
 
-  // We ask Gemini to return strict JSON with four fields, so the frontend
-  // can render the same "Simple / Urdu / Explain like I'm 15" tabs it
-  // already supports, regardless of which language the person asked in.
   const systemPrompt = `You are RI$E AI, a friendly financial-literacy tutor for Pakistani teenagers using the RI$E Finance app.
 Rules:
 - Never give specific investment, stock, or crypto recommendations. Explain concepts only.
@@ -50,8 +47,11 @@ Rules:
             },
           ],
           generationConfig: {
-            maxOutputTokens: 700,
+            maxOutputTokens: 1500,
             responseMimeType: "application/json",
+            thinkingConfig: {
+              thinkingLevel: "minimal",
+            },
           },
         }),
       }
@@ -72,7 +72,6 @@ Rules:
 
     let parsed;
     try {
-      // Strip markdown fences just in case the model adds them despite instructions
       const cleaned = rawText.replace(/```json|```/g, "").trim();
       parsed = JSON.parse(cleaned);
     } catch (parseErr) {
