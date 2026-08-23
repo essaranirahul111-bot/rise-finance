@@ -243,17 +243,13 @@ const MODULES = [
   },
 ];
 
+// requiresModule maps a badge to the module id that earns it.
+// "ai-learner" isn't tracked yet (no AI-usage logging), so it's left unearnable for now.
 const BADGES = [
-  { id: "first-save", label: "First Save", icon: "🐖", earned: true },
-  { id: "money-basics", label: "Money Basics", icon: "💵", earned: true },
-  { id: "inflation-explorer", label: "Inflation Explorer", icon: "🎈", earned: false },
-  { id: "ai-learner", label: "AI Learner", icon: "🤖", earned: false },
-];
-
-const TESTIMONIALS = [
-  { name: "Ayesha K.", role: "Grade 11, Lahore", quote: "Finally explained compound interest in a way that actually made sense.", demo: true },
-  { name: "Bilal R.", role: "A-Levels, Karachi", quote: "The daily challenges take like 30 seconds and I actually remember them.", demo: true },
-  { name: "Zara M.", role: "Grade 9, Islamabad", quote: "I like that it's in Roman Urdu too — I understand it faster.", demo: true },
+  { id: "first-save", label: "First Save", icon: "🐖", requiresModule: "saving" },
+  { id: "money-basics", label: "Money Basics", icon: "💵", requiresModule: "money-basics" },
+  { id: "inflation-explorer", label: "Inflation Explorer", icon: "🎈", requiresModule: "inflation" },
+  { id: "ai-learner", label: "AI Learner", icon: "🤖", requiresModule: null },
 ];
 
 const AI_QUICK_QUESTIONS = [
@@ -1041,15 +1037,18 @@ const SectionLabel = ({ children }) => (
 
 const NAME_STORAGE_KEY = "rise-finance-user-name";
 const CHALLENGE_PROGRESS_KEY = "rise-finance-challenge-progress";
+const COMPLETED_MODULES_KEY = "rise-finance-completed-modules";
+const VISIT_LOG_KEY = "rise-finance-visit-log";
 
 export default function RiseFinanceApp() {
   const [tab, setTab] = useState("home");
   const [lang, setLang] = useState("en");
   const [openModuleId, setOpenModuleId] = useState(null);
-  const [completed, setCompleted] = useState(new Set(["money-basics"]));
-  const [streak] = useState(4);
+  // Real progress only — no pre-seeded fake completion. New users start at 0/10.
+  const [completed, setCompleted] = useState(new Set());
+  const [streak, setStreak] = useState(0);
 
-  // Name identity — used for challenge certificates
+  // Name identity — asked before Challenges so the certificate can carry it
   const [userName, setUserName] = useState("");
   const [showNameModal, setShowNameModal] = useState(false);
   const [pendingAction, setPendingAction] = useState(null); // where to go once name is set
@@ -1063,6 +1062,23 @@ export default function RiseFinanceApp() {
       if (savedName) setUserName(savedName);
       const savedProgress = window.localStorage.getItem(CHALLENGE_PROGRESS_KEY);
       if (savedProgress) setChallengeAnswers(JSON.parse(savedProgress));
+      const savedCompleted = window.localStorage.getItem(COMPLETED_MODULES_KEY);
+      if (savedCompleted) setCompleted(new Set(JSON.parse(savedCompleted)));
+
+      // Real learning streak: log today's visit, count back consecutive days.
+      const today = new Date().toISOString().slice(0, 10);
+      const rawLog = window.localStorage.getItem(VISIT_LOG_KEY);
+      const log = rawLog ? JSON.parse(rawLog) : [];
+      if (!log.includes(today)) log.push(today);
+      window.localStorage.setItem(VISIT_LOG_KEY, JSON.stringify(log));
+      let count = 0;
+      let cursor = new Date();
+      const dateSet = new Set(log);
+      while (dateSet.has(cursor.toISOString().slice(0, 10))) {
+        count += 1;
+        cursor.setDate(cursor.getDate() - 1);
+      }
+      setStreak(count);
     } catch (e) {
       /* localStorage unavailable — app still works, just without persistence */
     }
@@ -1073,6 +1089,12 @@ export default function RiseFinanceApp() {
       window.localStorage.setItem(CHALLENGE_PROGRESS_KEY, JSON.stringify(challengeAnswers));
     } catch (e) {}
   }, [challengeAnswers]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(COMPLETED_MODULES_KEY, JSON.stringify([...completed]));
+    } catch (e) {}
+  }, [completed]);
 
   const saveName = (name) => {
     setUserName(name);
@@ -1172,7 +1194,7 @@ export default function RiseFinanceApp() {
       )}
 
       <main className="max-w-6xl mx-auto px-4 md:px-6 py-10">
-        {tab === "home" && <HomePage setTab={setTab} lang={lang} t={t} completed={completed} />}
+        {tab === "home" && <HomePage setTab={setTab} lang={lang} t={t} completed={completed} streak={streak} />}
         {tab === "learn" && !openModule && (
           <LearnPage completed={completed} onOpen={(id) => setOpenModuleId(id)} />
         )}
@@ -1251,7 +1273,7 @@ function LangToggle({ lang, setLang }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* NAME MODAL — required before starting challenges (for certificate) */
+/* NAME MODAL — asked before Challenges, so the certificate can carry it  */
 /* ------------------------------------------------------------------ */
 
 function NameModal({ onSubmit, onClose }) {
@@ -1272,7 +1294,7 @@ function NameModal({ onSubmit, onClose }) {
         <div className="text-2xl mb-2">🏆</div>
         <h3 className="text-xl font-bold">What's your name?</h3>
         <p className="text-sm text-[#9AA39C] mt-2">
-          We'll use this for your progress and your shareable completion certificate.
+          We'll use this to put your name on your shareable certificate once you finish the challenges.
         </p>
         <input
           autoFocus
@@ -1298,7 +1320,7 @@ function NameModal({ onSubmit, onClose }) {
 /* HOME PAGE                                                          */
 /* ------------------------------------------------------------------ */
 
-function HomePage({ setTab, lang, t, completed }) {
+function HomePage({ setTab, lang, t, completed, streak }) {
   const isUrdu = lang === "ur";
   const totalModules = MODULES.length;
   const doneCount = completed ? completed.size : 0;
@@ -1334,8 +1356,8 @@ function HomePage({ setTab, lang, t, completed }) {
             </div>
             {[
               ["Modules completed", `${doneCount} / ${totalModules}`],
-              ["Quiz average", doneCount > 0 ? "91%" : "—"],
-              ["Learning streak", doneCount > 0 ? "4 days 🔥" : "0 days"],
+              ["Quiz average", "—"],
+              ["Learning streak", `${streak} day${streak === 1 ? "" : "s"}${streak > 0 ? " 🔥" : ""}`],
               ["Concepts learned", `${doneCount * 3}`],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between py-1.5 text-[#C9D1CB]">
@@ -1427,21 +1449,16 @@ function HomePage({ setTab, lang, t, completed }) {
         ))}
       </section>
 
-      {/* TESTIMONIALS */}
-      <section>
-        <SectionLabel>What early users say · demo testimonials</SectionLabel>
-        <div className="grid md:grid-cols-3 gap-4">
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
-              <p className="text-sm text-[#C9D1CB]">"{t.quote}"</p>
-              <div className="mt-4 text-xs">
-                <span className="text-[#F2F5F2] font-medium">{t.name}</span>
-                <span className="text-[#7C867E]"> · {t.role}</span>
-              </div>
-              <Pill>Fictional / demo</Pill>
-            </div>
-          ))}
+      {/* EARLY TESTER CTA — replaces fictional testimonials until real ones exist */}
+      <section className="bg-gradient-to-br from-[#0E3B27]/40 to-[#0E100E] border border-[#1E6B48]/40 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div>
+          <Pill tone="accent">Early access</Pill>
+          <p className="mt-3 text-lg font-semibold max-w-md">We're still testing RI$E — be one of the first to try it.</p>
+          <p className="text-sm text-[#9AA39C] mt-1">No fake reviews here. Try a lesson and tell us what worked and what didn't — real feedback shapes what we build next.</p>
         </div>
+        <button onClick={() => setTab("survey")} className="shrink-0 px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm flex items-center gap-2">
+          Give feedback <ChevronRight size={15} />
+        </button>
       </section>
     </div>
   );
@@ -2111,7 +2128,7 @@ function ProgressPage({ completed, streak }) {
         <div className="px-6 py-5 font-mono text-sm space-y-3">
           <Row label="Modules completed" value={`${done} / ${total}`} />
           <Row label="Current streak" value={`${streak} days`} />
-          <Row label="Quiz average" value="91%" />
+          <Row label="Quiz average" value="—" />
           <Row label="Concepts learned" value={`${done * 3}`} />
         </div>
       </div>
@@ -2119,13 +2136,16 @@ function ProgressPage({ completed, streak }) {
       <div className="mt-8">
         <SectionLabel>Badges</SectionLabel>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {BADGES.map((b) => (
-            <div key={b.id} className={`rounded-xl border p-4 text-center ${b.earned ? "border-[#1E6B48]/50 bg-[#0E3B27]/20" : "border-[#1A1D19] opacity-40"}`}>
-              <div className="text-2xl">{b.icon}</div>
-              <div className="text-xs mt-2 text-[#C9D1CB]">{b.label}</div>
-              {b.earned && <Award size={12} className="text-[#5CFFB0] mx-auto mt-1" />}
-            </div>
-          ))}
+          {BADGES.map((b) => {
+            const earned = b.requiresModule ? completed.has(b.requiresModule) : false;
+            return (
+              <div key={b.id} className={`rounded-xl border p-4 text-center ${earned ? "border-[#1E6B48]/50 bg-[#0E3B27]/20" : "border-[#1A1D19] opacity-40"}`}>
+                <div className="text-2xl">{b.icon}</div>
+                <div className="text-xs mt-2 text-[#C9D1CB]">{b.label}</div>
+                {earned && <Award size={12} className="text-[#5CFFB0] mx-auto mt-1" />}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -2229,10 +2249,6 @@ function AboutPage() {
         The long-term vision combines financial literacy, AI literacy, Urdu accessibility, and practical education — starting with Pakistani youth, who are rarely taught this in school.
       </p>
       <p className="text-sm text-[#7C867E] mt-6">Built by Rahul Kumar.</p>
-      <div className="mt-6 flex items-start gap-2 text-xs text-[#7C867E] bg-[#0E100E] border border-[#1E211C] rounded-lg p-4">
-        <ShieldAlert size={14} className="mt-0.5 shrink-0" />
-        This is an early-stage demo. It does not handle real money, connect to bank accounts, or provide personalized financial advice.
-      </div>
     </div>
   );
 }
