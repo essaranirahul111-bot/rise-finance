@@ -1231,7 +1231,6 @@ export default function RiseFinanceApp() {
 
       <footer className="border-t border-[#1A1D19] py-8 mt-10">
         <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#7C867E]">
-          <span>RI$E Finance — educational demo. Not financial advice. Built by Rahul Kumar.</span>
           <div className="flex items-center gap-4">
             <button onClick={() => setTab("survey")} className="hover:text-[#5CFFB0] transition-colors flex items-center gap-1">
               <ClipboardList size={12} /> Give feedback
