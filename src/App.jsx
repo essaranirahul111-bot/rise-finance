@@ -2247,7 +2247,7 @@ function AboutPage() {
       <p className="text-[#9AA39C] leading-relaxed mt-4">
         The long-term vision combines financial literacy, AI literacy, Urdu accessibility, and practical education — starting with Pakistani youth, who are rarely taught this in school.
       </p>
-      <p className="text-sm text-[#7C867E] mt-6">Built by Rahul Kumar.</p>
+      <p className="text-sm text-[#7C867E] mt-6">Follow @risefinance.ai for financial literacy that doesn't suck. 💚</p>
     </div>
   );
 }
