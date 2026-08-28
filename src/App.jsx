@@ -3,7 +3,8 @@ import {
   Home, BookOpen, Bot, Trophy, TrendingUp, Info, Globe,
   CheckCircle2, Circle, Flame, Award, ChevronRight, Send,
   Sparkles, Lock, ArrowRight, Landmark, ShieldAlert, PiggyBank,
-  Mic, Volume2, X, Download, ClipboardList, Star, Medal, Loader2
+  Mic, Volume2, X, Download, ClipboardList, Star, Medal, Loader2,
+  PenLine, HelpCircle
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -1231,7 +1232,6 @@ export default function RiseFinanceApp() {
 
       <footer className="border-t border-[#1A1D19] py-8 mt-10">
         <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#7C867E]">
-          <span>RI$E Finance — educational demo. Not financial advice. Built by Rahul Kumar.</span>
           <div className="flex items-center gap-4">
             <button onClick={() => setTab("survey")} className="hover:text-[#5CFFB0] transition-colors flex items-center gap-1">
               <ClipboardList size={12} /> Give feedback
@@ -1369,6 +1369,35 @@ function HomePage({ setTab, lang, t, completed, streak }) {
         </div>
       </section>
 
+      {/* PROBLEM */}
+      <section className="max-w-2xl">
+        <SectionLabel>Why this exists</SectionLabel>
+        <p className="text-2xl md:text-3xl font-bold leading-snug">
+          Most Pakistani teens finish school without ever learning how to save, budget, or avoid debt.
+        </p>
+        <p className="text-[#9AA39C] mt-3">
+          It's not taught in class, and most apps that try are either too complicated or built for adults abroad. RI$E is built from scratch for teens, in Pakistan, in plain language.
+        </p>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section>
+        <SectionLabel>How it works</SectionLabel>
+        <div className="grid md:grid-cols-3 gap-4">
+          {[
+            [BookOpen, "Learn", "Short lessons, under 10 minutes each, zero jargon."],
+            [PenLine, "Practice", "Quizzes and real PKR challenges to make it stick."],
+            [Award, "Get certified", "Finish the challenges and download a certificate with your name on it."],
+          ].map(([Icon, title, body]) => (
+            <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
+              <Icon size={20} className="text-[#5CFFB0] mb-3" />
+              <div className="font-semibold">{title}</div>
+              <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* STATS */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
@@ -1447,6 +1476,33 @@ function HomePage({ setTab, lang, t, completed, streak }) {
             <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
           </div>
         ))}
+      </section>
+
+      {/* CREDIBILITY */}
+      <section className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 md:p-8 max-w-2xl">
+        <Pill tone="accent">Backed by research</Pill>
+        <p className="mt-3 text-lg font-semibold">Not just an app — built on real research into why teen financial literacy in Pakistan is so low.</p>
+        <p className="text-sm text-[#9AA39C] mt-1">That research shaped what RI$E teaches and how it teaches it.</p>
+      </section>
+
+      {/* FAQ */}
+      <section className="max-w-2xl">
+        <SectionLabel>Questions</SectionLabel>
+        <div className="space-y-3">
+          {[
+            ["Is RI$E free?", "Yes, completely free. No hidden costs, no premium tier."],
+            ["Does it connect to my bank account?", "No. RI$E never touches real money or bank accounts — it's a learning space only."],
+            ["Who is it for?", "Pakistani teens who want to understand money before they're handling real income."],
+          ].map(([q, a]) => (
+            <div key={q} className="p-4 rounded-xl border border-[#1E211C] flex gap-3">
+              <HelpCircle size={18} className="text-[#5CFFB0] shrink-0 mt-0.5" />
+              <div>
+                <div className="font-semibold text-sm">{q}</div>
+                <p className="text-sm text-[#9AA39C] mt-1">{a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* EARLY TESTER CTA — replaces fictional testimonials until real ones exist */}
@@ -2248,7 +2304,7 @@ function AboutPage() {
       <p className="text-[#9AA39C] leading-relaxed mt-4">
         The long-term vision combines financial literacy, AI literacy, Urdu accessibility, and practical education — starting with Pakistani youth, who are rarely taught this in school.
       </p>
-      <p className="text-sm text-[#7C867E] mt-6">Built by Rahul Kumar.</p>
+      <p className="text-sm text-[#7C867E] mt-6">Follow us on Instagram @risefinance.ai for daily insights on money and investing. 💚</p>
     </div>
   );
 }
