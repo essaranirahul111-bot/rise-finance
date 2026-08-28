@@ -1327,44 +1327,24 @@ function HomePage({ setTab, lang, t, completed, streak }) {
   return (
     <div className="space-y-24">
       {/* HERO */}
-      <section className="pt-6 md:pt-12">
-        <div className="grid md:grid-cols-[1.3fr_1fr] gap-10 items-center">
-          <div dir={isUrdu ? "rtl" : "ltr"}>
-            <Pill tone="accent">{t.heroTag}</Pill>
-            <h1 className="mt-5 text-4xl md:text-6xl font-black leading-[1.05] tracking-tight">
-              {t.heroTitle[0]}
-              <br />
-              {t.heroTitle[1]} <span className="text-[#00E28A]">{t.heroTitle[2]}</span>
-            </h1>
-            <p className="mt-5 text-[#9AA39C] text-lg max-w-md">
-              {t.heroSub}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button onClick={() => setTab("learn")} className="px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm hover:bg-[#5CFFB0] transition-colors flex items-center gap-2">
-                {t.ctaStart} <ArrowRight size={15} />
-              </button>
-              <button onClick={() => setTab("ai")} className="px-5 py-3 rounded-lg border border-[#242822] text-[#F2F5F2] font-semibold text-sm hover:border-[#00E28A] transition-colors flex items-center gap-2">
-                <Sparkles size={15} className="text-[#5CFFB0]" /> {t.ctaAi}
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-5 font-mono text-sm">
-            <div className="flex justify-between text-[#7C867E] text-xs mb-4 pb-3 border-b border-dashed border-[#242822]">
-              <span>LEARNING LEDGER</span>
-              <span>YOUR PROGRESS</span>
-            </div>
-            {[
-              ["Modules completed", `${doneCount} / ${totalModules}`],
-              ["Quiz average", "—"],
-              ["Learning streak", `${streak} day${streak === 1 ? "" : "s"}${streak > 0 ? " 🔥" : ""}`],
-              ["Concepts learned", `${doneCount * 3}`],
-            ].map(([k, v]) => (
-              <div key={k} className="flex justify-between py-1.5 text-[#C9D1CB]">
-                <span className="text-[#7C867E]">{k}</span>
-                <span className="text-[#5CFFB0]">{v}</span>
-              </div>
-            ))}
+      <section className="pt-10 md:pt-16 pb-4">
+        <div className="max-w-2xl mx-auto text-center" dir={isUrdu ? "rtl" : "ltr"}>
+          <Pill tone="accent">{t.heroTag}</Pill>
+          <h1 className="mt-5 text-4xl md:text-6xl font-black leading-[1.05] tracking-tight">
+            {t.heroTitle[0]}
+            <br />
+            {t.heroTitle[1]} <span className="text-[#00E28A]">{t.heroTitle[2]}</span>
+          </h1>
+          <p className="mt-5 text-[#9AA39C] text-lg max-w-md mx-auto">
+            {t.heroSub}
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <button onClick={() => setTab("learn")} className="px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm hover:bg-[#5CFFB0] transition-colors flex items-center gap-2">
+              {t.ctaStart} <ArrowRight size={15} />
+            </button>
+            <button onClick={() => setTab("ai")} className="px-5 py-3 rounded-lg border border-[#242822] text-[#F2F5F2] font-semibold text-sm hover:border-[#00E28A] transition-colors flex items-center gap-2">
+              <Sparkles size={15} className="text-[#5CFFB0]" /> {t.ctaAi}
+            </button>
           </div>
         </div>
       </section>
