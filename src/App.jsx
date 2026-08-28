@@ -1360,14 +1360,93 @@ function HomePage({ setTab, lang, t, completed, streak }) {
         </p>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* HOW RISE HELPS — the core value flow, made prominent */}
       <section>
-        <SectionLabel>How it works</SectionLabel>
-        <div className="grid md:grid-cols-3 gap-4">
+        <SectionLabel>How RI$E helps you</SectionLabel>
+        <h2 className="text-2xl md:text-3xl font-bold leading-snug max-w-lg">
+          Learn finance without the boring stuff.
+        </h2>
+        <p className="text-[#9AA39C] mt-2 max-w-lg">
+          One simple loop, repeated until it sticks.
+        </p>
+        <div className="mt-8 flex flex-col md:flex-row items-stretch gap-3">
           {[
-            [BookOpen, "Learn", "Short lessons, under 10 minutes each, zero jargon."],
-            [PenLine, "Practice", "Quizzes and real PKR challenges to make it stick."],
-            [Award, "Get certified", "Finish the challenges and download a certificate with your name on it."],
+            [BookOpen, "Short lessons", "Under 10 minutes, zero jargon."],
+            [Bot, "AI explains", "Confused? Ask RI$E AI in plain English or Urdu."],
+            [PenLine, "Challenges", "Real PKR scenarios to make it stick."],
+            [TrendingUp, "Track progress", "Streaks, badges, and a certificate at the end."],
+          ].map(([Icon, title, body], i, arr) => (
+            <React.Fragment key={title}>
+              <div className="flex-1 bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
+                <Icon size={20} className="text-[#5CFFB0] mb-3" />
+                <div className="font-semibold">{title}</div>
+                <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
+              </div>
+              {i < arr.length - 1 && (
+                <div className="hidden md:flex items-center text-[#3A403C]">
+                  <ChevronRight size={18} />
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </section>
+
+      {/* WHAT YOU CAN DO — product previews */}
+      <section>
+        <SectionLabel>What you can do on RI$E</SectionLabel>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 hover:border-[#00E28A]/40 transition-colors cursor-pointer" onClick={() => setTab("learn")}>
+            <BookOpen size={20} className="text-[#5CFFB0] mb-3" />
+            <div className="font-semibold">Learn</div>
+            <p className="text-sm text-[#9AA39C] mt-1">10 modules covering money basics to saving and debt, {doneCount}/{totalModules} done so far by early testers.</p>
+          </div>
+          <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 hover:border-[#00E28A]/40 transition-colors cursor-pointer" onClick={() => setTab("ai")}>
+            <Bot size={20} className="text-[#5CFFB0] mb-3" />
+            <div className="font-semibold">AI Tutor</div>
+            <p className="text-sm text-[#9AA39C] mt-1">Ask "What is inflation?" and get a real answer in English, Urdu, or Roman Urdu.</p>
+          </div>
+          <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 hover:border-[#00E28A]/40 transition-colors cursor-pointer" onClick={() => setTab("challenges")}>
+            <PenLine size={20} className="text-[#5CFFB0] mb-3" />
+            <div className="font-semibold">Challenges</div>
+            <p className="text-sm text-[#9AA39C] mt-1">"You receive Rs. 1,000. How would you divide it?" Quick, practical, PKR-based.</p>
+          </div>
+          <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 hover:border-[#00E28A]/40 transition-colors cursor-pointer" onClick={() => setTab("progress")}>
+            <TrendingUp size={20} className="text-[#5CFFB0] mb-3" />
+            <div className="font-semibold">Progress</div>
+            <p className="text-sm text-[#9AA39C] mt-1">See your streak, concepts learned, and a certificate once you finish.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST — stats, credibility, reassurance, FAQ */}
+      <section>
+        <SectionLabel>Why trust RI$E</SectionLabel>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {[
+            ["10", "Learning modules"],
+            ["AI", "Tutor, always on"],
+            ["3", "Languages supported"],
+            ["Rs. 0", "Cost to start"],
+          ].map(([num, label]) => (
+            <div key={label} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
+              <div className="text-2xl font-black text-[#00E28A] font-mono">{num}</div>
+              <div className="text-xs text-[#9AA39C] mt-1">{label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 md:p-8 max-w-2xl mb-6">
+          <Pill tone="accent">Backed by research</Pill>
+          <p className="mt-3 text-lg font-semibold">Not just an app — built on real research into why teen financial literacy in Pakistan is so low.</p>
+          <p className="text-sm text-[#9AA39C] mt-1">That research shaped what RI$E teaches and how it teaches it.</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
+          {[
+            [PiggyBank, "No jargon, ever", "Every concept explained the way you'd explain it to a friend — not a textbook."],
+            [ShieldAlert, "No real money involved", "This is a learning space, not a trading app. Nothing here touches your bank account."],
+            [Landmark, "Made for Pakistan", "PKR examples, local context, and Urdu support — not translated from somewhere else."],
           ].map(([Icon, title, body]) => (
             <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
               <Icon size={20} className="text-[#5CFFB0] mb-3" />
@@ -1376,116 +1455,27 @@ function HomePage({ setTab, lang, t, completed, streak }) {
             </div>
           ))}
         </div>
-      </section>
 
-      {/* STATS */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          ["10", "Learning modules"],
-          ["AI", "Tutor, always on"],
-          ["3", "Languages supported"],
-          ["Rs. 0", "Cost to start"],
-        ].map(([num, label]) => (
-          <div key={label} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
-            <div className="text-2xl font-black text-[#00E28A] font-mono">{num}</div>
-            <div className="text-xs text-[#9AA39C] mt-1">{label}</div>
-          </div>
-        ))}
-      </section>
-
-      {/* FEATURED COURSES */}
-      <section>
-        <SectionLabel>Featured modules</SectionLabel>
-        <div className="grid md:grid-cols-3 gap-4">
-          {MODULES.filter((m) => m.built).slice(0, 3).map((m) => (
-            <div key={m.id} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 hover:border-[#00E28A]/40 transition-colors cursor-pointer" onClick={() => setTab("learn")}>
-              <div className="text-2xl mb-3">{m.icon}</div>
-              <div className="font-semibold">{m.title}</div>
-              <p className="text-sm text-[#9AA39C] mt-1">{m.desc}</p>
-              <div className="flex gap-2 mt-3">
-                <Pill>{m.difficulty}</Pill>
-                <Pill>{m.time}</Pill>
+        <div className="max-w-2xl">
+          <div className="space-y-3">
+            {[
+              ["Is RI$E free?", "Yes, completely free. No hidden costs, no premium tier."],
+              ["Does it connect to my bank account?", "No. RI$E never touches real money or bank accounts — it's a learning space only."],
+              ["Who is it for?", "Pakistani teens who want to understand money before they're handling real income."],
+            ].map(([q, a]) => (
+              <div key={q} className="p-4 rounded-xl border border-[#1E211C] flex gap-3">
+                <HelpCircle size={18} className="text-[#5CFFB0] shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-semibold text-sm">{q}</div>
+                  <p className="text-sm text-[#9AA39C] mt-1">{a}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* DAILY CHALLENGE PREVIEW */}
-      <section className="bg-gradient-to-br from-[#0E3B27]/40 to-[#0E100E] border border-[#1E6B48]/40 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div>
-          <Pill tone="accent">Daily challenge</Pill>
-          <p className="mt-3 text-lg font-semibold max-w-md">"You receive Rs. 1,000. How would you divide it?"</p>
-          <p className="text-sm text-[#9AA39C] mt-1">Takes 30 seconds. Teaches a real concept every time.</p>
-        </div>
-        <button onClick={() => setTab("challenges")} className="shrink-0 px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm flex items-center gap-2">
-          Try today's challenge <ChevronRight size={15} />
-        </button>
-      </section>
-
-      {/* AI TUTOR PREVIEW */}
-      <section>
-        <SectionLabel>Ask RI$E AI</SectionLabel>
-        <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 grid md:grid-cols-2 gap-6 items-center">
-          <div>
-            <h3 className="text-xl font-bold flex items-center gap-2"><Bot size={20} className="text-[#5CFFB0]" /> Your always-on money tutor</h3>
-            <p className="text-sm text-[#9AA39C] mt-2">Ask anything about money in plain English, Urdu, or Roman Urdu. Get simple answers, real PKR examples, and a quick quiz to check it stuck.</p>
-            <button onClick={() => setTab("ai")} className="mt-4 text-sm text-[#5CFFB0] flex items-center gap-1">
-              Open AI Tutor <ArrowRight size={14} />
-            </button>
-          </div>
-          <div className="bg-[#08090A] border border-[#1E211C] rounded-xl p-4 text-sm space-y-2">
-            <div className="text-[#7C867E]">You asked</div>
-            <div className="text-[#F2F5F2]">"What is inflation?"</div>
-            <div className="text-[#7C867E] mt-3">RI$E AI</div>
-            <div className="text-[#C9D1CB]">Inflation is when things generally cost more over time, so the same money buys a little less each year.</div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* BUILT FOR YOUNG PEOPLE */}
-      <section className="grid md:grid-cols-3 gap-4">
-        {[
-          [PiggyBank, "No jargon, ever", "Every concept explained the way you'd explain it to a friend — not a textbook."],
-          [ShieldAlert, "No real money involved", "This is a learning space, not a trading app. Nothing here touches your bank account."],
-          [Landmark, "Made for Pakistan", "PKR examples, local context, and Urdu support — not translated from somewhere else."],
-        ].map(([Icon, title, body]) => (
-          <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
-            <Icon size={20} className="text-[#5CFFB0] mb-3" />
-            <div className="font-semibold">{title}</div>
-            <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* CREDIBILITY */}
-      <section className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 md:p-8 max-w-2xl">
-        <Pill tone="accent">Backed by research</Pill>
-        <p className="mt-3 text-lg font-semibold">Not just an app — built on real research into why teen financial literacy in Pakistan is so low.</p>
-        <p className="text-sm text-[#9AA39C] mt-1">That research shaped what RI$E teaches and how it teaches it.</p>
-      </section>
-
-      {/* FAQ */}
-      <section className="max-w-2xl">
-        <SectionLabel>Questions</SectionLabel>
-        <div className="space-y-3">
-          {[
-            ["Is RI$E free?", "Yes, completely free. No hidden costs, no premium tier."],
-            ["Does it connect to my bank account?", "No. RI$E never touches real money or bank accounts — it's a learning space only."],
-            ["Who is it for?", "Pakistani teens who want to understand money before they're handling real income."],
-          ].map(([q, a]) => (
-            <div key={q} className="p-4 rounded-xl border border-[#1E211C] flex gap-3">
-              <HelpCircle size={18} className="text-[#5CFFB0] shrink-0 mt-0.5" />
-              <div>
-                <div className="font-semibold text-sm">{q}</div>
-                <p className="text-sm text-[#9AA39C] mt-1">{a}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* EARLY TESTER CTA — replaces fictional testimonials until real ones exist */}
+      {/* FINAL CTA — replaces fictional testimonials until real ones exist */}
       <section className="bg-gradient-to-br from-[#0E3B27]/40 to-[#0E100E] border border-[#1E6B48]/40 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div>
           <Pill tone="accent">Early access</Pill>
