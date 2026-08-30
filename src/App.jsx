@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import AdminFeedback from "./pages/AdminFeedback";
 import {
   Home, BookOpen, Bot, Trophy, TrendingUp, Info, Globe,
   CheckCircle2, Circle, Flame, Award, ChevronRight, Send,
@@ -1043,6 +1044,13 @@ const VISIT_LOG_KEY = "rise-finance-visit-log";
 
 export default function RiseFinanceApp() {
   const [tab, setTab] = useState("home");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("admin") === "feedback") {
+      setTab("admin-feedback");
+    }
+  }, []);
   const [lang, setLang] = useState("en");
   const [openModuleId, setOpenModuleId] = useState(null);
   // Real progress only — no pre-seeded fake completion. New users start at 0/10.
@@ -1228,6 +1236,7 @@ export default function RiseFinanceApp() {
         {tab === "progress" && <ProgressPage completed={completed} streak={streak} />}
         {tab === "research" && <ResearchPage />}
         {tab === "about" && <AboutPage />}
+        {tab === "admin-feedback" && <AdminFeedback />}
       </main>
 
       <footer className="border-t border-[#1A1D19] py-8 mt-10">
