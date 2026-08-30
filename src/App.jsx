@@ -2054,12 +2054,21 @@ function SurveyPage({ onBack }) {
 
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const submit = () => {
+  const submit = async () => {
     try {
-      const existing = JSON.parse(window.localStorage.getItem("rise-finance-surveys") || "[]");
-      existing.push({ ...form, submittedAt: new Date().toISOString() });
-      window.localStorage.setItem("rise-finance-surveys", JSON.stringify(existing));
-    } catch (e) {}
+      const res = await fetch("/api/submit-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("bad response");
+    } catch (e) {
+      try {
+        const existing = JSON.parse(window.localStorage.getItem("rise-finance-surveys") || "[]");
+        existing.push({ ...form, submittedAt: new Date().toISOString() });
+        window.localStorage.setItem("rise-finance-surveys", JSON.stringify(existing));
+      } catch (e2) {}
+    }
     setSubmitted(true);
   };
 
