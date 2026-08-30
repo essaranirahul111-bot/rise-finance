@@ -6,13 +6,19 @@
 //
 // Security hardening added:
 //  - Origin lock: only requests from allowed origins are served
-//  - Rate limiting: per-IP sliding window (in-memory; resets on cold start —
-//    good enough at current traffic, upgrade to Vercel KV/Upstash if this
-//    function ever runs across many concurrent instances)
+//  - Rate limiting: per-IP fixed window, backed by Upstash Redis (via the
+//    Vercel Marketplace "rise-finance-ratelimit" database) so the count is
+//    shared across every serverless instance instead of resetting per
+//    cold start like an in-memory counter would.
 //  - Input validation: rejects empty / oversized / non-string payloads
+//
+// Requires these env vars (already set in Vercel → Settings → Environment
+// Variables via the Upstash integration): KV_REST_API_URL, KV_REST_API_TOKEN
 //
 // Request body:  { question: string, lang: "en" | "ur" | "roman" }
 // Response body: { simple: string, urdu: string, like15: string, example: string }
+
+import { Redis } from "@upstash/redis";
 
 // ---- Config ----
 const ALLOWED_ORIGINS = [
@@ -23,39 +29,30 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5173",
 ];
 const MAX_QUESTION_LENGTH = 500;
-const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_WINDOW_SECONDS = 60; // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 10; // per IP per window
 
-// ---- In-memory rate limit store (per function instance) ----
-// NOTE: this resets whenever Vercel spins up a new instance (cold start),
-// and isn't shared across instances. It stops casual abuse/bill-runaway
-// today; for real scale, swap this for Vercel KV or Upstash Redis.
-const rateLimitStore = new Map();
+// ---- Redis client (reused across warm invocations) ----
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
-function isRateLimited(ip) {
-  const now = Date.now();
-  const entry = rateLimitStore.get(ip);
+// Returns true if this IP has exceeded the limit for the current window.
+// Fixed-window counter: key is "ratelimit:<ip>:<windowNumber>", incremented
+// on every request, with a TTL so old windows clean themselves up.
+async function isRateLimited(ip) {
+  const windowNumber = Math.floor(Date.now() / 1000 / RATE_LIMIT_WINDOW_SECONDS);
+  const key = `ratelimit:${ip}:${windowNumber}`;
 
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitStore.set(ip, { windowStart: now, count: 1 });
-    return false;
+  const count = await redis.incr(key);
+  if (count === 1) {
+    // First request in this window — set expiry so the key disappears
+    // shortly after the window ends instead of lingering forever.
+    await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS * 2);
   }
 
-  entry.count += 1;
-  if (entry.count > RATE_LIMIT_MAX_REQUESTS) {
-    return true;
-  }
-  return false;
-}
-
-// Periodically clean up old entries so the Map doesn't grow forever
-function cleanupRateLimitStore() {
-  const now = Date.now();
-  for (const [ip, entry] of rateLimitStore.entries()) {
-    if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS * 5) {
-      rateLimitStore.delete(ip);
-    }
-  }
+  return count > RATE_LIMIT_MAX_REQUESTS;
 }
 
 function getClientIp(req) {
@@ -99,11 +96,16 @@ export default async function handler(req, res) {
   }
 
   // --- Rate limiting ---
-  cleanupRateLimitStore();
   const clientIp = getClientIp(req);
-  if (isRateLimited(clientIp)) {
-    res.setHeader("Retry-After", "60");
-    return res.status(429).json({ error: "Too many requests. Please slow down and try again in a minute." });
+  try {
+    if (await isRateLimited(clientIp)) {
+      res.setHeader("Retry-After", "60");
+      return res.status(429).json({ error: "Too many requests. Please slow down and try again in a minute." });
+    }
+  } catch (err) {
+    // If Redis itself is unreachable, fail open (allow the request) rather
+    // than taking down the whole AI Tutor feature — log it so it's visible.
+    console.error("Rate limit check failed, allowing request:", err);
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
