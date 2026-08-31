@@ -139,6 +139,27 @@ const MODULES = [
     roman: { title: "Mehangai", explanation: "Mehangai ka matlab hai waqt ke saath cheezon ki qeematein barhti hain, is liye wohi paisa pehle se kam cheezein khareed sakta hai." },
   },
   {
+    id: "stablecoins",
+    title: "Stablecoins",
+    difficulty: "Advanced",
+    time: "7 min",
+    icon: "🪙",
+    desc: "Why a dollar-pegged token behaves differently when the rupee weakens.",
+    built: true,
+    explanation:
+      "A stablecoin is a cryptocurrency built to hold a steady value, usually pegged 1:1 to the US dollar. The biggest ones, like USDT and USDC, hold real dollar reserves — mostly US Treasury bills and cash — to back every token in circulation. In countries where the local currency is weakening, like Pakistan, people don't mainly use stablecoins to trade or speculate. They use them as a phone-held way to hold dollar value when opening a real dollar bank account isn't realistic — Pakistan has over 100 million unbanked adults.",
+    example:
+      "When a currency comes under pressure, the price people pay for a stablecoin like USDT often rises above the official exchange rate — this gap is called the 'premium.' In Venezuela in 2026, the USDT premium jumped about 16% in just 30 days as the bolivar weakened. In India, USDT traded 7-10% above normal after a regulatory crackdown squeezed supply — even though the rupee itself wasn't under stress. The premium isn't just sentiment — it's a real-time signal of how hard it is to actually get dollars.",
+    takeaway: "Stablecoins aren't risk-free. Their safety depends on what's actually backing them, whether the issuer is trustworthy, and whether you can easily convert back to cash — they trade one kind of risk (currency depreciation) for another (issuer and access risk).",
+    quiz: [
+      { q: "A fiat-backed stablecoin like USDT mainly holds its value by...", options: ["Complex trading algorithms", "Real dollar reserves like Treasury bills", "Government price controls"], correct: 1 },
+      { q: "In Pakistan, stablecoins are mostly used for...", options: ["Speculative day trading", "Store of value and remittances", "Buying NFTs"], correct: 1 },
+      { q: "A rising stablecoin 'premium' usually signals...", options: ["The stablecoin is broken", "Growing difficulty accessing real dollars", "Nothing meaningful"], correct: 1 },
+    ],
+    ur: { title: "اسٹیبل کوائن", explanation: "اسٹیبل کوائن ایک ایسی کرپٹو کرنسی ہے جو امریکی ڈالر کے ساتھ مستقل قیمت رکھنے کے لیے بنائی گئی ہے۔" },
+    roman: { title: "Stablecoins", explanation: "Stablecoin aik aisi cryptocurrency hai jo US dollar ke sath mustaqil qeemat rakhne ke liye banai gayi hai — mostly reserve dollars se backed hoti hai." },
+  },
+  {
     id: "banking",
     title: "Banking",
     difficulty: "Beginner",
