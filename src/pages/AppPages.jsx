@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Home, BookOpen, Bot, Trophy, TrendingUp, Info, Globe,
   CheckCircle2, Circle, Flame, Award, ChevronRight, Send,
@@ -7,9 +7,7 @@ import {
   PenLine, HelpCircle
 } from "lucide-react";
 
-/* ------------------------------------------------------------------ */
-/* MOCK DATA                                                          */
-/* ------------------------------------------------------------------ */
+/* ================= DATA & TEXT (unchanged from original App.jsx) ================= */
 
 const MODULES = [
   {
@@ -136,6 +134,27 @@ const MODULES = [
     ],
     ur: { title: "مہنگائی", explanation: "مہنگائی کا مطلب ہے کہ وقت کے ساتھ چیزوں کی قیمتیں بڑھتی ہیں، اس لیے وہی رقم پہلے سے کم چیزیں خرید سکتی ہے۔" },
     roman: { title: "Mehangai", explanation: "Mehangai ka matlab hai waqt ke saath cheezon ki qeematein barhti hain, is liye wohi paisa pehle se kam cheezein khareed sakta hai." },
+  },
+  {
+    id: "stablecoins",
+    title: "Stablecoins",
+    difficulty: "Advanced",
+    time: "7 min",
+    icon: "🪙",
+    desc: "Why a dollar-pegged token behaves differently when the rupee weakens.",
+    built: true,
+    explanation:
+      "A stablecoin is a cryptocurrency built to hold a steady value, usually pegged 1:1 to the US dollar. The biggest ones, like USDT and USDC, hold real dollar reserves — mostly US Treasury bills and cash — to back every token in circulation. In countries where the local currency is weakening, like Pakistan, people don't mainly use stablecoins to trade or speculate. They use them as a phone-held way to hold dollar value when opening a real dollar bank account isn't realistic — Pakistan has over 100 million unbanked adults.",
+    example:
+      "When a currency comes under pressure, the price people pay for a stablecoin like USDT often rises above the official exchange rate — this gap is called the 'premium.' In Venezuela in 2026, the USDT premium jumped about 16% in just 30 days as the bolivar weakened. In India, USDT traded 7-10% above normal after a regulatory crackdown squeezed supply — even though the rupee itself wasn't under stress. The premium isn't just sentiment — it's a real-time signal of how hard it is to actually get dollars.",
+    takeaway: "Stablecoins aren't risk-free. Their safety depends on what's actually backing them, whether the issuer is trustworthy, and whether you can easily convert back to cash — they trade one kind of risk (currency depreciation) for another (issuer and access risk).",
+    quiz: [
+      { q: "A fiat-backed stablecoin like USDT mainly holds its value by...", options: ["Complex trading algorithms", "Real dollar reserves like Treasury bills", "Government price controls"], correct: 1 },
+      { q: "In Pakistan, stablecoins are mostly used for...", options: ["Speculative day trading", "Store of value and remittances", "Buying NFTs"], correct: 1 },
+      { q: "A rising stablecoin 'premium' usually signals...", options: ["The stablecoin is broken", "Growing difficulty accessing real dollars", "Nothing meaningful"], correct: 1 },
+    ],
+    ur: { title: "اسٹیبل کوائن", explanation: "اسٹیبل کوائن ایک ایسی کرپٹو کرنسی ہے جو امریکی ڈالر کے ساتھ مستقل قیمت رکھنے کے لیے بنائی گئی ہے۔" },
+    roman: { title: "Stablecoins", explanation: "Stablecoin aik aisi cryptocurrency hai jo US dollar ke sath mustaqil qeemat rakhne ke liye banai gayi hai — mostly reserve dollars se backed hoti hai." },
   },
   {
     id: "banking",
@@ -1013,6 +1032,9 @@ const CHALLENGES = [
 /* SMALL UI PRIMITIVES                                                */
 /* ------------------------------------------------------------------ */
 
+
+/* ================= SHARED UI ATOMS ================= */
+
 const Pill = ({ children, tone = "default" }) => {
   const tones = {
     default: "bg-[#141712] text-[#9AA39C] border-[#242822]",
@@ -1041,212 +1063,6 @@ const CHALLENGE_PROGRESS_KEY = "rise-finance-challenge-progress";
 const COMPLETED_MODULES_KEY = "rise-finance-completed-modules";
 const VISIT_LOG_KEY = "rise-finance-visit-log";
 
-export default function RiseFinanceApp() {
-  const [tab, setTab] = useState("home");
-  const [lang, setLang] = useState("en");
-  const [openModuleId, setOpenModuleId] = useState(null);
-  // Real progress only — no pre-seeded fake completion. New users start at 0/10.
-  const [completed, setCompleted] = useState(new Set());
-  const [streak, setStreak] = useState(0);
-
-  // Name identity — asked before Challenges so the certificate can carry it
-  const [userName, setUserName] = useState("");
-  const [showNameModal, setShowNameModal] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null); // where to go once name is set
-
-  // Challenge progress lives at the top level so the Certificate page can read it
-  const [challengeAnswers, setChallengeAnswers] = useState({}); // { [index]: optionIndex }
-
-  useEffect(() => {
-    try {
-      const savedName = window.localStorage.getItem(NAME_STORAGE_KEY);
-      if (savedName) setUserName(savedName);
-      const savedProgress = window.localStorage.getItem(CHALLENGE_PROGRESS_KEY);
-      if (savedProgress) setChallengeAnswers(JSON.parse(savedProgress));
-      const savedCompleted = window.localStorage.getItem(COMPLETED_MODULES_KEY);
-      if (savedCompleted) setCompleted(new Set(JSON.parse(savedCompleted)));
-
-      // Real learning streak: log today's visit, count back consecutive days.
-      const today = new Date().toISOString().slice(0, 10);
-      const rawLog = window.localStorage.getItem(VISIT_LOG_KEY);
-      const log = rawLog ? JSON.parse(rawLog) : [];
-      if (!log.includes(today)) log.push(today);
-      window.localStorage.setItem(VISIT_LOG_KEY, JSON.stringify(log));
-      let count = 0;
-      let cursor = new Date();
-      const dateSet = new Set(log);
-      while (dateSet.has(cursor.toISOString().slice(0, 10))) {
-        count += 1;
-        cursor.setDate(cursor.getDate() - 1);
-      }
-      setStreak(count);
-    } catch (e) {
-      /* localStorage unavailable — app still works, just without persistence */
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(CHALLENGE_PROGRESS_KEY, JSON.stringify(challengeAnswers));
-    } catch (e) {}
-  }, [challengeAnswers]);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(COMPLETED_MODULES_KEY, JSON.stringify([...completed]));
-    } catch (e) {}
-  }, [completed]);
-
-  const saveName = (name) => {
-    setUserName(name);
-    try { window.localStorage.setItem(NAME_STORAGE_KEY, name); } catch (e) {}
-    setShowNameModal(false);
-    if (pendingAction) {
-      setTab(pendingAction);
-      setPendingAction(null);
-    }
-  };
-
-  const requireName = (destination) => {
-    if (userName) {
-      setTab(destination);
-    } else {
-      setPendingAction(destination);
-      setShowNameModal(true);
-    }
-  };
-
-  const t = UI_TEXT[lang];
-  const navItems = [
-    { id: "home", label: t.nav.home, icon: Home },
-    { id: "learn", label: t.nav.learn, icon: BookOpen },
-    { id: "research", label: t.nav.research, icon: Landmark },
-    { id: "ai", label: t.nav.ai, icon: Bot },
-    { id: "challenges", label: t.nav.challenges, icon: Trophy },
-    { id: "progress", label: t.nav.progress, icon: TrendingUp },
-    { id: "about", label: t.nav.about, icon: Info },
-  ];
-
-  const openModule = MODULES.find((m) => m.id === openModuleId);
-
-  return (
-    <div className="min-h-screen w-full bg-[#08090A] text-[#F2F5F2] font-sans">
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-30 border-b border-[#1A1D19] bg-[#08090A]/95 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between h-16">
-          <button onClick={() => setTab("home")} className="flex items-center gap-2 shrink-0">
-            <span className="text-xl font-black tracking-tight">
-              RI<span className="text-[#00E28A]">$</span>E
-            </span>
-            <span className="hidden sm:inline text-[10px] font-mono text-[#7C867E] tracking-widest uppercase">Finance</span>
-          </button>
-
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setOpenModuleId(null);
-                  if (item.id === "challenges") requireName("challenges");
-                  else setTab(item.id);
-                }}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-colors ${
-                  tab === item.id || (item.id === "challenges" && (tab === "certificate"))
-                    ? "bg-[#141712] text-[#5CFFB0]" : "text-[#9AA39C] hover:text-[#F2F5F2]"
-                }`}
-              >
-                <item.icon size={15} />
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-2">
-            <LangToggle lang={lang} setLang={setLang} />
-          </div>
-        </div>
-
-        {/* mobile nav */}
-        <nav className="md:hidden flex overflow-x-auto gap-1 px-3 pb-2 no-scrollbar">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setOpenModuleId(null);
-                if (item.id === "challenges") requireName("challenges");
-                else setTab(item.id);
-              }}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs whitespace-nowrap border ${
-                tab === item.id ? "bg-[#0E3B27] text-[#5CFFB0] border-[#1E6B48]" : "text-[#9AA39C] border-[#1A1D19]"
-              }`}
-            >
-              <item.icon size={13} />
-              {item.label}
-            </button>
-          ))}
-        </nav>
-      </header>
-
-      {showNameModal && (
-        <NameModal
-          onSubmit={saveName}
-          onClose={() => { setShowNameModal(false); setPendingAction(null); }}
-        />
-      )}
-
-      <main className="max-w-6xl mx-auto px-4 md:px-6 py-10">
-        {tab === "home" && <HomePage setTab={setTab} lang={lang} t={t} completed={completed} streak={streak} />}
-        {tab === "learn" && !openModule && (
-          <LearnPage completed={completed} onOpen={(id) => setOpenModuleId(id)} />
-        )}
-        {tab === "learn" && openModule && (
-          <ModulePage
-            mod={openModule}
-            lang={lang}
-            completed={completed.has(openModule.id)}
-            onComplete={() => setCompleted((prev) => new Set(prev).add(openModule.id))}
-            onBack={() => setOpenModuleId(null)}
-          />
-        )}
-        {tab === "ai" && <AiTutorPage lang={lang} />}
-        {tab === "challenges" && (
-          <ChallengesPage
-            userName={userName}
-            answers={challengeAnswers}
-            setAnswers={setChallengeAnswers}
-            onViewCertificate={() => setTab("certificate")}
-          />
-        )}
-        {tab === "certificate" && (
-          <CertificatePage
-            userName={userName}
-            answers={challengeAnswers}
-            onBack={() => setTab("challenges")}
-          />
-        )}
-        {tab === "survey" && <SurveyPage onBack={() => setTab("home")} />}
-        {tab === "progress" && <ProgressPage completed={completed} streak={streak} />}
-        {tab === "research" && <ResearchPage />}
-        {tab === "about" && <AboutPage />}
-      </main>
-
-      <footer className="border-t border-[#1A1D19] py-8 mt-10">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#7C867E]">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setTab("survey")} className="hover:text-[#5CFFB0] transition-colors flex items-center gap-1">
-              <ClipboardList size={12} /> Give feedback
-            </button>
-            <span className="font-mono">MVP v0.2</span>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* LANGUAGE TOGGLE                                                    */
-/* ------------------------------------------------------------------ */
 
 function LangToggle({ lang, setLang }) {
   const opts = [
@@ -1276,233 +1092,8 @@ function LangToggle({ lang, setLang }) {
 /* NAME MODAL — asked before Challenges, so the certificate can carry it  */
 /* ------------------------------------------------------------------ */
 
-function NameModal({ onSubmit, onClose }) {
-  const [value, setValue] = useState("");
 
-  const submit = () => {
-    const trimmed = value.trim();
-    if (trimmed.length < 2) return;
-    onSubmit(trimmed);
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
-      <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 max-w-sm w-full relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-[#7C867E] hover:text-[#F2F5F2]">
-          <X size={18} />
-        </button>
-        <div className="text-2xl mb-2">🏆</div>
-        <h3 className="text-xl font-bold">What's your name?</h3>
-        <p className="text-sm text-[#9AA39C] mt-2">
-          We'll use this to put your name on your shareable certificate once you finish the challenges.
-        </p>
-        <input
-          autoFocus
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
-          placeholder="e.g. Rahul Kumar"
-          className="mt-4 w-full bg-[#08090A] border border-[#1E211C] rounded-lg px-4 py-3 text-sm outline-none focus:border-[#00E28A]"
-        />
-        <button
-          onClick={submit}
-          disabled={value.trim().length < 2}
-          className="mt-4 w-full px-4 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          Continue
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* HOME PAGE                                                          */
-/* ------------------------------------------------------------------ */
-
-function HomePage({ setTab, lang, t, completed, streak }) {
-  const isUrdu = lang === "ur";
-  const totalModules = MODULES.length;
-  const doneCount = completed ? completed.size : 0;
-  return (
-    <div className="space-y-24">
-      {/* HERO */}
-      <section className="pt-10 md:pt-16 pb-4">
-        <div className="max-w-2xl mx-auto text-center" dir={isUrdu ? "rtl" : "ltr"}>
-          <Pill tone="accent">{t.heroTag}</Pill>
-          <h1 className="mt-5 text-4xl md:text-6xl font-black leading-[1.05] tracking-tight">
-            {t.heroTitle[0]}
-            <br />
-            {t.heroTitle[1]} <span className="text-[#00E28A]">{t.heroTitle[2]}</span>
-          </h1>
-          <p className="mt-5 text-[#9AA39C] text-lg max-w-md mx-auto">
-            {t.heroSub}
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <button onClick={() => setTab("learn")} className="px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm hover:bg-[#5CFFB0] transition-colors flex items-center gap-2">
-              {t.ctaStart} <ArrowRight size={15} />
-            </button>
-            <button onClick={() => setTab("ai")} className="px-5 py-3 rounded-lg border border-[#242822] text-[#F2F5F2] font-semibold text-sm hover:border-[#00E28A] transition-colors flex items-center gap-2">
-              <Sparkles size={15} className="text-[#5CFFB0]" /> {t.ctaAi}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* PROBLEM */}
-      <section className="max-w-2xl">
-        <SectionLabel>Why this exists</SectionLabel>
-        <p className="text-2xl md:text-3xl font-bold leading-snug">
-          Most Pakistani teens finish school without ever learning how to save, budget, or avoid debt.
-        </p>
-        <p className="text-[#9AA39C] mt-3">
-          It's not taught in class, and most apps that try are either too complicated or built for adults abroad. RI$E is built from scratch for teens, in Pakistan, in plain language.
-        </p>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section>
-        <SectionLabel>How it works</SectionLabel>
-        <div className="grid md:grid-cols-3 gap-4">
-          {[
-            [BookOpen, "Learn", "Short lessons, under 10 minutes each, zero jargon."],
-            [PenLine, "Practice", "Quizzes and real PKR challenges to make it stick."],
-            [Award, "Get certified", "Finish the challenges and download a certificate with your name on it."],
-          ].map(([Icon, title, body]) => (
-            <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
-              <Icon size={20} className="text-[#5CFFB0] mb-3" />
-              <div className="font-semibold">{title}</div>
-              <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* STATS */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          ["10", "Learning modules"],
-          ["AI", "Tutor, always on"],
-          ["3", "Languages supported"],
-          ["Rs. 0", "Cost to start"],
-        ].map(([num, label]) => (
-          <div key={label} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
-            <div className="text-2xl font-black text-[#00E28A] font-mono">{num}</div>
-            <div className="text-xs text-[#9AA39C] mt-1">{label}</div>
-          </div>
-        ))}
-      </section>
-
-      {/* FEATURED COURSES */}
-      <section>
-        <SectionLabel>Featured modules</SectionLabel>
-        <div className="grid md:grid-cols-3 gap-4">
-          {MODULES.filter((m) => m.built).slice(0, 3).map((m) => (
-            <div key={m.id} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 hover:border-[#00E28A]/40 transition-colors cursor-pointer" onClick={() => setTab("learn")}>
-              <div className="text-2xl mb-3">{m.icon}</div>
-              <div className="font-semibold">{m.title}</div>
-              <p className="text-sm text-[#9AA39C] mt-1">{m.desc}</p>
-              <div className="flex gap-2 mt-3">
-                <Pill>{m.difficulty}</Pill>
-                <Pill>{m.time}</Pill>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* DAILY CHALLENGE PREVIEW */}
-      <section className="bg-gradient-to-br from-[#0E3B27]/40 to-[#0E100E] border border-[#1E6B48]/40 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div>
-          <Pill tone="accent">Daily challenge</Pill>
-          <p className="mt-3 text-lg font-semibold max-w-md">"You receive Rs. 1,000. How would you divide it?"</p>
-          <p className="text-sm text-[#9AA39C] mt-1">Takes 30 seconds. Teaches a real concept every time.</p>
-        </div>
-        <button onClick={() => setTab("challenges")} className="shrink-0 px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm flex items-center gap-2">
-          Try today's challenge <ChevronRight size={15} />
-        </button>
-      </section>
-
-      {/* AI TUTOR PREVIEW */}
-      <section>
-        <SectionLabel>Ask RI$E AI</SectionLabel>
-        <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 grid md:grid-cols-2 gap-6 items-center">
-          <div>
-            <h3 className="text-xl font-bold flex items-center gap-2"><Bot size={20} className="text-[#5CFFB0]" /> Your always-on money tutor</h3>
-            <p className="text-sm text-[#9AA39C] mt-2">Ask anything about money in plain English, Urdu, or Roman Urdu. Get simple answers, real PKR examples, and a quick quiz to check it stuck.</p>
-            <button onClick={() => setTab("ai")} className="mt-4 text-sm text-[#5CFFB0] flex items-center gap-1">
-              Open AI Tutor <ArrowRight size={14} />
-            </button>
-          </div>
-          <div className="bg-[#08090A] border border-[#1E211C] rounded-xl p-4 text-sm space-y-2">
-            <div className="text-[#7C867E]">You asked</div>
-            <div className="text-[#F2F5F2]">"What is inflation?"</div>
-            <div className="text-[#7C867E] mt-3">RI$E AI</div>
-            <div className="text-[#C9D1CB]">Inflation is when things generally cost more over time, so the same money buys a little less each year.</div>
-          </div>
-        </div>
-      </section>
-
-      {/* BUILT FOR YOUNG PEOPLE */}
-      <section className="grid md:grid-cols-3 gap-4">
-        {[
-          [PiggyBank, "No jargon, ever", "Every concept explained the way you'd explain it to a friend — not a textbook."],
-          [ShieldAlert, "No real money involved", "This is a learning space, not a trading app. Nothing here touches your bank account."],
-          [Landmark, "Made for Pakistan", "PKR examples, local context, and Urdu support — not translated from somewhere else."],
-        ].map(([Icon, title, body]) => (
-          <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
-            <Icon size={20} className="text-[#5CFFB0] mb-3" />
-            <div className="font-semibold">{title}</div>
-            <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* CREDIBILITY */}
-      <section className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 md:p-8 max-w-2xl">
-        <Pill tone="accent">Backed by research</Pill>
-        <p className="mt-3 text-lg font-semibold">Not just an app — built on real research into why teen financial literacy in Pakistan is so low.</p>
-        <p className="text-sm text-[#9AA39C] mt-1">That research shaped what RI$E teaches and how it teaches it.</p>
-      </section>
-
-      {/* FAQ */}
-      <section className="max-w-2xl">
-        <SectionLabel>Questions</SectionLabel>
-        <div className="space-y-3">
-          {[
-            ["Is RI$E free?", "Yes, completely free. No hidden costs, no premium tier."],
-            ["Does it connect to my bank account?", "No. RI$E never touches real money or bank accounts — it's a learning space only."],
-            ["Who is it for?", "Pakistani teens who want to understand money before they're handling real income."],
-          ].map(([q, a]) => (
-            <div key={q} className="p-4 rounded-xl border border-[#1E211C] flex gap-3">
-              <HelpCircle size={18} className="text-[#5CFFB0] shrink-0 mt-0.5" />
-              <div>
-                <div className="font-semibold text-sm">{q}</div>
-                <p className="text-sm text-[#9AA39C] mt-1">{a}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* EARLY TESTER CTA — replaces fictional testimonials until real ones exist */}
-      <section className="bg-gradient-to-br from-[#0E3B27]/40 to-[#0E100E] border border-[#1E6B48]/40 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div>
-          <Pill tone="accent">Early access</Pill>
-          <p className="mt-3 text-lg font-semibold max-w-md">We're still testing RI$E — be one of the first to try it.</p>
-          <p className="text-sm text-[#9AA39C] mt-1">No fake reviews here. Try a lesson and tell us what worked and what didn't — real feedback shapes what we build next.</p>
-        </div>
-        <button onClick={() => setTab("survey")} className="shrink-0 px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm flex items-center gap-2">
-          Give feedback <ChevronRight size={15} />
-        </button>
-      </section>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* LEARN PAGE                                                         */
-/* ------------------------------------------------------------------ */
+/* ================= PAGES (logic preserved from original App.jsx) ================= */
 
 function LearnPage({ completed, onOpen }) {
   return (
@@ -1550,7 +1141,8 @@ function LearnPage({ completed, onOpen }) {
 /* MODULE DETAIL PAGE                                                 */
 /* ------------------------------------------------------------------ */
 
-function ModulePage({ mod, lang, completed, onComplete, onBack }) {
+
+function ModulePage({ mod, lang, completed, onComplete, onBack, onAskTutor, relatedChallengeDifficulty, onGoToChallenges }) {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -1641,6 +1233,33 @@ function ModulePage({ mod, lang, completed, onComplete, onBack }) {
             {completed && <Pill tone="accent">Completed ✓</Pill>}
           </div>
         )}
+
+        {submitted && (onAskTutor || onGoToChallenges) && (
+          <div className="mt-6 bg-[#0E3B27]/20 border border-[#1E6B48]/40 rounded-xl p-5">
+            <div className="text-[11px] font-mono uppercase tracking-widest text-[#5CFFB0] mb-3">Keep the loop going</div>
+            <p className="text-sm text-[#C9D1CB] mb-4">
+              Reading about {mod.title.toLowerCase()} is step one. Ask the tutor a real question about it, then try a challenge that uses it — that's how it actually sticks.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {onAskTutor && (
+                <button
+                  onClick={onAskTutor}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm"
+                >
+                  <Bot size={15} /> Ask RI$E AI about {mod.title}
+                </button>
+              )}
+              {onGoToChallenges && (
+                <button
+                  onClick={onGoToChallenges}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#242822] text-[#F2F5F2] font-semibold text-sm hover:border-[#00E28A]"
+                >
+                  <PenLine size={15} /> Try a related challenge{relatedChallengeDifficulty ? ` (${relatedChallengeDifficulty})` : ""}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1650,203 +1269,6 @@ function ModulePage({ mod, lang, completed, onComplete, onBack }) {
 /* AI TUTOR PAGE                                                      */
 /* ------------------------------------------------------------------ */
 
-function AiTutorPage({ lang }) {
-  const [query, setQuery] = useState("");
-  const [current, setCurrent] = useState(null);
-  const [view, setView] = useState("simple");
-  const [listening, setListening] = useState(false);
-  const [voiceNote, setVoiceNote] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [usedLiveAI, setUsedLiveAI] = useState(false);
-
-  const speechSupported =
-    typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
-  const ttsSupported = typeof window !== "undefined" && "speechSynthesis" in window;
-  const locale = SPEECH_LOCALE[lang] || "en-US";
-
-  // Calls the Vercel serverless function at /api/ask-gemini, which securely
-  // calls the Gemini API using the GEMINI_API_KEY environment variable.
-  // Falls back to the local mock responses if the call fails (e.g. running
-  // locally without the env var set, or if Gemini is temporarily down).
-  const askGemini = async (q) => {
-    const res = await fetch("/api/ask-gemini", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q, lang }),
-    });
-    if (!res.ok) throw new Error(`API error: ${res.status}`);
-    const data = await res.json();
-    // Expected shape: { simple, urdu, like15, example }
-    return data;
-  };
-
-  const ask = async (q) => {
-    const trimmed = q.trim();
-    if (!trimmed) return;
-    setLoading(true);
-    setQuery("");
-    setView(lang === "ur" ? "urdu" : "simple");
-
-    try {
-      const res = await askGemini(trimmed);
-      setCurrent({ question: trimmed, ...res });
-      setUsedLiveAI(true);
-    } catch (err) {
-      // Fallback: local mock response bank, for offline dev or if the API key isn't configured yet
-      const key = trimmed.toLowerCase();
-      const res = AI_RESPONSES[key] || DEFAULT_AI_RESPONSE;
-      setCurrent({ question: trimmed, ...res });
-      setUsedLiveAI(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const startListening = () => {
-    if (!speechSupported) {
-      setVoiceNote("Voice input isn't supported in this browser — try typing instead.");
-      return;
-    }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SR();
-    recognition.lang = locale;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    setVoiceNote("");
-    setListening(true);
-
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setQuery(transcript);
-      setListening(false);
-      ask(transcript);
-    };
-    recognition.onerror = () => {
-      setListening(false);
-      setVoiceNote("Didn't catch that — check mic permissions, or type your question below.");
-    };
-    recognition.onend = () => setListening(false);
-
-    recognition.start();
-  };
-
-  const speak = (text, forcedLang) => {
-    if (!ttsSupported) return;
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = SPEECH_LOCALE[forcedLang || lang] || "en-US";
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utter);
-  };
-
-  return (
-    <div className="max-w-2xl">
-      <SectionLabel>AI Tutor</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-2 flex items-center gap-2">
-        <Bot className="text-[#5CFFB0]" /> Ask RI$E AI
-      </h2>
-      <p className="text-[#9AA39C] mb-2">RI$E AI is an educational assistant — not a financial adviser. It won't recommend specific stocks, crypto, or products.</p>
-      <p className="text-xs text-[#7C867E] mb-6">Works with typing or voice, in English or Urdu — pick your language from the top bar.</p>
-
-      <div className="flex gap-2 mb-2">
-        <input
-          value={query}
-          disabled={loading}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && query.trim() && ask(query)}
-          placeholder={lang === "ur" ? "پیسے سے متعلق کچھ پوچھیں…" : "Ask something about money…"}
-          dir={lang === "ur" ? "rtl" : "ltr"}
-          className="flex-1 bg-[#0E100E] border border-[#1E211C] rounded-lg px-4 py-3 text-sm outline-none focus:border-[#00E28A] disabled:opacity-50"
-        />
-        <button
-          onClick={startListening}
-          disabled={loading}
-          title="Ask by voice"
-          className={`px-4 py-3 rounded-lg border transition-colors disabled:opacity-40 ${
-            listening ? "border-[#00E28A] bg-[#0E3B27]/40 text-[#5CFFB0] animate-pulse" : "border-[#1E211C] text-[#9AA39C] hover:border-[#00E28A] hover:text-[#5CFFB0]"
-          }`}
-        >
-          <Mic size={16} />
-        </button>
-        <button
-          onClick={() => query.trim() && ask(query)}
-          disabled={loading}
-          className="px-4 py-3 rounded-lg bg-[#00E28A] text-[#06110B] disabled:opacity-50"
-        >
-          <Send size={16} />
-        </button>
-      </div>
-
-      {listening && <p className="text-xs text-[#5CFFB0] mb-4">Listening… speak your question now.</p>}
-      {voiceNote && <p className="text-xs text-[#7C867E] mb-4">{voiceNote}</p>}
-
-      <div className="flex flex-wrap gap-2 mb-8">
-        {AI_QUICK_QUESTIONS.map((q) => (
-          <button key={q} disabled={loading} onClick={() => ask(q)} className="text-xs px-3 py-1.5 rounded-full border border-[#1E211C] text-[#9AA39C] hover:border-[#00E28A] hover:text-[#5CFFB0] disabled:opacity-40">
-            {q}
-          </button>
-        ))}
-      </div>
-
-      {loading && (
-        <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5 flex items-center gap-3 text-sm text-[#9AA39C]">
-          <Loader2 size={16} className="animate-spin text-[#5CFFB0]" /> Thinking…
-        </div>
-      )}
-
-      {!loading && current && (
-        <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
-          <div className="flex items-center justify-between mb-1">
-            <div className="text-xs text-[#7C867E]">You asked</div>
-            <Pill tone={usedLiveAI ? "accent" : "default"}>{usedLiveAI ? "Live Gemini" : "Offline sample"}</Pill>
-          </div>
-          <div className="font-medium mb-4">{current.question}</div>
-
-          <div className="flex gap-2 mb-4">
-            {[["simple", "Simple answer"], ["urdu", "Explain in Urdu"], ["like15", "Explain like I'm 15"]].map(([k, label]) => (
-              <button
-                key={k}
-                onClick={() => setView(k)}
-                className={`text-xs px-3 py-1.5 rounded-full border ${view === k ? "border-[#00E28A] text-[#5CFFB0] bg-[#0E3B27]/30" : "border-[#1E211C] text-[#9AA39C]"}`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-[#C9D1CB] leading-relaxed" dir={view === "urdu" ? "rtl" : "ltr"}>
-              {current[view]}
-            </p>
-            {ttsSupported && (
-              <button
-                onClick={() => speak(current[view], view === "urdu" ? "ur" : lang)}
-                title="Listen"
-                className="shrink-0 p-2 rounded-lg border border-[#1E211C] text-[#9AA39C] hover:border-[#00E28A] hover:text-[#5CFFB0]"
-              >
-                <Volume2 size={14} />
-              </button>
-            )}
-          </div>
-
-          <div className="mt-4 pt-4 border-t border-dashed border-[#242822]">
-            <div className="text-[11px] font-mono uppercase tracking-widest text-[#5CFFB0] mb-1">Example</div>
-            <p className="text-sm text-[#9AA39C]">{current.example}</p>
-          </div>
-
-          <div className="mt-4 flex items-start gap-2 text-xs text-[#7C867E] bg-[#08090A] rounded-lg p-3">
-            <ShieldAlert size={14} className="mt-0.5 shrink-0" />
-            Educational only — always verify important financial info with a trusted adult or professional.
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* CHALLENGES PAGE                                                    */
-/* ------------------------------------------------------------------ */
 
 const CERTIFICATE_THRESHOLD = 20; // minimum challenges to unlock the certificate
 
@@ -1958,6 +1380,7 @@ function ChallengesPage({ userName, answers, setAnswers, onViewCertificate }) {
 /* CERTIFICATE PAGE — canvas-rendered, downloadable as PNG            */
 /* ------------------------------------------------------------------ */
 
+
 function CertificatePage({ userName, answers, onBack }) {
   const canvasRef = useRef(null);
   const answeredCount = Object.keys(answers).length;
@@ -2058,18 +1481,28 @@ function CertificatePage({ userName, answers, onBack }) {
 /* SURVEY PAGE                                                        */
 /* ------------------------------------------------------------------ */
 
+
 function SurveyPage({ onBack }) {
   const [form, setForm] = useState({ name: "", age: "", city: "", familiarity: "", feedback: "" });
   const [submitted, setSubmitted] = useState(false);
 
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const submit = () => {
+  const submit = async () => {
     try {
-      const existing = JSON.parse(window.localStorage.getItem("rise-finance-surveys") || "[]");
-      existing.push({ ...form, submittedAt: new Date().toISOString() });
-      window.localStorage.setItem("rise-finance-surveys", JSON.stringify(existing));
-    } catch (e) {}
+      const res = await fetch("/api/submit-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("bad response");
+    } catch (e) {
+      try {
+        const existing = JSON.parse(window.localStorage.getItem("rise-finance-surveys") || "[]");
+        existing.push({ ...form, submittedAt: new Date().toISOString() });
+        window.localStorage.setItem("rise-finance-surveys", JSON.stringify(existing));
+      } catch (e2) {}
+    }
     setSubmitted(true);
   };
 
@@ -2147,6 +1580,7 @@ function Field({ label, children }) {
 /* PROGRESS PAGE — "passbook" signature element                      */
 /* ------------------------------------------------------------------ */
 
+
 function ProgressPage({ completed, streak }) {
   const total = MODULES.length;
   const done = completed.size;
@@ -2200,6 +1634,7 @@ function Row({ label, value }) {
 /* ------------------------------------------------------------------ */
 /* ABOUT PAGE                                                         */
 /* ------------------------------------------------------------------ */
+
 
 function ResearchPage() {
   const papers = [
@@ -2273,6 +1708,7 @@ function ResearchPage() {
   );
 }
 
+
 function AboutPage() {
   return (
     <div className="max-w-xl">
@@ -2288,3 +1724,10 @@ function AboutPage() {
     </div>
   );
 }
+
+
+export {
+  MODULES, BADGES, CHALLENGES, CERTIFICATE_THRESHOLD, UI_TEXT, SPEECH_LOCALE, AI_QUICK_QUESTIONS, AI_RESPONSES, DEFAULT_AI_RESPONSE,
+  Pill, SectionLabel, LangToggle,
+  LearnPage, ModulePage, ChallengesPage, CertificatePage, SurveyPage, ProgressPage, ResearchPage, AboutPage,
+};

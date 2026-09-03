@@ -114,7 +114,7 @@ export default async function handler(req, res) {
   }
 
   // --- Input validation ---
-  const { question } = req.body || {};
+  const { question, history, topic } = req.body || {};
   if (!question || typeof question !== "string" || !question.trim()) {
     return res.status(400).json({ error: "A 'question' string is required" });
   }
@@ -125,15 +125,36 @@ export default async function handler(req, res) {
     });
   }
 
-  const systemPrompt = `You are RI$E AI, a friendly financial-literacy tutor for Pakistani teenagers using the RI$E Finance app.
+  // Optional short conversation history so the tutor can handle natural
+  // follow-ups ("what about for a business?") instead of treating every
+  // message as a cold, context-free question. Capped and length-limited
+  // server-side regardless of what the client sends.
+  let historyBlock = "";
+  if (Array.isArray(history) && history.length > 0) {
+    const recent = history
+      .slice(-4)
+      .filter((h) => h && typeof h.question === "string" && typeof h.simple === "string")
+      .map((h) => `Student asked: "${h.question.slice(0, 300)}"\nYou answered: "${h.simple.slice(0, 300)}"`)
+      .join("\n\n");
+    if (recent) {
+      historyBlock = `\n\nRecent conversation so far (for context on follow-ups):\n${recent}`;
+    }
+  }
+
+  const topicLine = typeof topic === "string" && topic.trim()
+    ? `\n\nThe student just finished a lesson on "${topic.trim()}" — tie your answer back to that lesson where it's natural to.`
+    : "";
+
+  const systemPrompt = `You are RI$E AI, a friendly financial-literacy tutor for Pakistani teenagers using the RI$E Finance app. You are a tutor having an ongoing conversation, not a generic search engine — build on what's already been discussed, and teach the concept rather than just stating a fact.
 Rules:
 - Never give specific investment, stock, or crypto recommendations. Explain concepts only.
 - Always use PKR (Rs.) in examples, grounded in everyday Pakistani life (chai, biryani, Easypaisa/JazzCash, etc).
 - Keep each field concise: 2-4 sentences.
 - Respond ONLY with valid JSON, no markdown fences, no preamble, matching exactly this shape:
-{"simple": "...", "urdu": "... (in Urdu script) ...", "like15": "... (explained casually, like to a 15 year old, with an analogy) ...", "example": "... (one concrete PKR example) ..."}`;
+{"simple": "...", "urdu": "... (in Urdu script) ...", "like15": "... (explained casually, like to a 15 year old, with an analogy) ...", "example": "... (one concrete PKR example) ...", "followups": ["...", "..."]}
+The "followups" field must be an array of exactly 2 short, natural follow-up questions (under 8 words each) a curious student might ask next.`;
 
-  const userPrompt = `The student's question is: "${trimmedQuestion}"`;
+  const userPrompt = `The student's question is: "${trimmedQuestion}"${topicLine}${historyBlock}`;
 
   try {
     const response = await fetch(
@@ -181,12 +202,18 @@ Rules:
       return res.status(502).json({ error: "Gemini returned malformed JSON" });
     }
 
-    const { simple, urdu, like15, example } = parsed;
+    const { simple, urdu, like15, example, followups } = parsed;
     if (!simple || !urdu || !like15 || !example) {
       return res.status(502).json({ error: "Gemini response missing expected fields" });
     }
 
-    return res.status(200).json({ simple, urdu, like15, example });
+    return res.status(200).json({
+      simple,
+      urdu,
+      like15,
+      example,
+      followups: Array.isArray(followups) ? followups.slice(0, 2) : [],
+    });
   } catch (err) {
     console.error("ask-gemini handler error:", err);
     return res.status(500).json({ error: "Unexpected server error" });
