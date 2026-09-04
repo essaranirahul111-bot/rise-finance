@@ -87,10 +87,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Reject requests from origins not on the allowlist (blocks other sites
-  // from calling this endpoint using your API key/quota). Allow requests
-  // with no Origin header (e.g. curl/server-to-server/local testing) to
-  // pass through — tighten this further if you don't need that.
   if (origin && !isAllowedOrigin(origin)) {
     return res.status(403).json({ error: "Origin not allowed" });
   }
@@ -103,8 +99,6 @@ export default async function handler(req, res) {
       return res.status(429).json({ error: "Too many requests. Please slow down and try again in a minute." });
     }
   } catch (err) {
-    // If Redis itself is unreachable, fail open (allow the request) rather
-    // than taking down the whole AI Tutor feature — log it so it's visible.
     console.error("Rate limit check failed, allowing request:", err);
   }
 
@@ -118,6 +112,7 @@ export default async function handler(req, res) {
   if (!question || typeof question !== "string" || !question.trim()) {
     return res.status(400).json({ error: "A 'question' string is required" });
   }
+
   const trimmedQuestion = question.trim();
   if (trimmedQuestion.length > MAX_QUESTION_LENGTH) {
     return res.status(400).json({
@@ -125,10 +120,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // Optional short conversation history so the tutor can handle natural
-  // follow-ups ("what about for a business?") instead of treating every
-  // message as a cold, context-free question. Capped and length-limited
-  // server-side regardless of what the client sends.
   let historyBlock = "";
   if (Array.isArray(history) && history.length > 0) {
     const recent = history
@@ -172,9 +163,6 @@ The "followups" field must be an array of exactly 2 short, natural follow-up que
           generationConfig: {
             maxOutputTokens: 1500,
             responseMimeType: "application/json",
-            thinkingConfig: {
-              thinkingLevel: "minimal",
-            },
           },
         }),
       }

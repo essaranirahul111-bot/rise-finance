@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -24,6 +24,17 @@ export default function Login() {
       return;
     }
     navigate(from, { replace: true });
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError("");
+    setLoading(true);
+    const { error } = await signInWithGoogle();
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+      return;
+    }
   };
 
   return (
@@ -70,6 +81,24 @@ export default function Login() {
             className="w-full py-2.5 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm disabled:opacity-50"
           >
             {loading ? "Logging in…" : "Log in"}
+          </button>
+
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#1E211C]"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-2 bg-[#0E100E] text-[#7C867E]">or</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+            className="w-full py-2.5 rounded-lg bg-[#1E211C] border border-[#2A2E28] text-[#F2F5F2] font-semibold text-sm hover:bg-[#2A2E28] disabled:opacity-50 transition"
+          >
+            Sign in with Google
           </button>
 
           <p className="text-sm text-[#7C867E] text-center pt-2">
