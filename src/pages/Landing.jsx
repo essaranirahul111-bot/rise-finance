@@ -1,12 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   BookOpen, Bot, PenLine, TrendingUp, ArrowRight, ChevronRight,
-  PiggyBank, ShieldAlert, Landmark, HelpCircle,
+  PiggyBank, ShieldAlert, Landmark, HelpCircle, Languages, Gift, Sparkles,
 } from "lucide-react";
-import { Pill, SectionLabel } from "./AppPages";
+import { Pill, SectionLabel, MODULES } from "./AppPages";
+
+const TOPIC_CHIPS = [
+  "Pocket money", "Budgeting in PKR", "Inflation", "Saving",
+  "Bank accounts", "Digital payments", "Online scams", "Investing basics",
+];
+
+const CHALLENGE_OPTIONS = [
+  { id: "spend", label: "Spend it on things I want" },
+  { id: "save", label: "Save all of it" },
+  { id: "split", label: "Split it between spending, saving and a goal" },
+];
+
+function MiniChallenge() {
+  const [picked, setPicked] = useState(null);
+  return (
+    <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl p-6 md:p-8 max-w-xl">
+      <Pill tone="accent">Try it now</Pill>
+      <p className="mt-3 text-lg font-semibold">You just received Rs. 5,000. What would you do?</p>
+      <div className="mt-4 flex flex-col gap-2">
+        {CHALLENGE_OPTIONS.map((opt) => (
+          <button
+            key={opt.id}
+            onClick={() => setPicked(opt.id)}
+            className={`text-left px-4 py-3 rounded-lg border text-sm transition-colors ${
+              picked === opt.id
+                ? "border-[#00E28A] bg-[#0E3B27]/30 text-[#F2F5F2]"
+                : "border-[#1E211C] text-[#C9D1CB] hover:border-[#00E28A]/40"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+      {picked && (
+        <p className="mt-4 text-sm text-[#9AA39C]">
+          There isn't one perfect answer. The important part is having a plan for your money.
+        </p>
+      )}
+      <Link
+        to="/signup"
+        className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#5CFFB0] hover:text-[#00E28A]"
+      >
+        Try a real RI$E challenge <ChevronRight size={15} />
+      </Link>
+    </div>
+  );
+}
 
 export default function Landing() {
+  const moduleCount = MODULES.length;
+
   return (
     <div className="min-h-screen w-full bg-[#08090A] text-[#F2F5F2] font-sans">
       <header className="sticky top-0 z-30 border-b border-[#1A1D19] bg-[#08090A]/95 backdrop-blur">
@@ -33,7 +82,7 @@ export default function Landing() {
               Build Your <span className="text-[#00E28A]">Future.</span>
             </h1>
             <p className="mt-5 text-[#9AA39C] text-lg max-w-md mx-auto">
-              RI$E makes financial literacy simple, practical, and built for the next generation — in English, Urdu, and Roman Urdu.
+              RI$E teaches Pakistani young people how money actually works — through simple lessons, an AI tutor, and real-world challenges.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link to="/signup" className="px-5 py-3 rounded-lg bg-[#00E28A] text-[#06110B] font-semibold text-sm hover:bg-[#5CFFB0] transition-colors flex items-center gap-2">
@@ -57,7 +106,29 @@ export default function Landing() {
           </p>
         </section>
 
-        {/* THE LOOP — this is the differentiation, made visible */}
+        {/* WHAT YOU'LL LEARN + MINI CHALLENGE */}
+        <section>
+          <SectionLabel>What you'll actually learn</SectionLabel>
+          <h2 className="text-2xl md:text-3xl font-bold leading-snug max-w-2xl">
+            {moduleCount} short modules covering the real situations you'll actually run into.
+          </h2>
+          <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
+            {TOPIC_CHIPS.map((chip) => (
+              <span
+                key={chip}
+                className="text-sm px-3 py-1.5 rounded-full border border-[#1E211C] text-[#C9D1CB] bg-[#0E100E]"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <MiniChallenge />
+          </div>
+        </section>
+
+        {/* WHY NOT CHATGPT — the loop, made explicit */}
         <section>
           <SectionLabel>Why not just use ChatGPT?</SectionLabel>
           <h2 className="text-2xl md:text-3xl font-bold leading-snug max-w-2xl">
@@ -66,6 +137,32 @@ export default function Landing() {
           <p className="text-[#9AA39C] mt-2 max-w-2xl">
             Ask any AI "what is inflation?" and you get one paragraph, once, with no memory of whether it actually landed. RI$E runs the same question through a loop built specifically to make it stick — with Pakistani examples, in your language, with something to track at the end.
           </p>
+
+          <div className="mt-6 grid md:grid-cols-2 gap-3 max-w-2xl">
+            <div className="rounded-xl border border-[#1E211C] p-4">
+              <div className="text-[11px] font-mono uppercase tracking-widest text-[#7C867E] mb-2">ChatGPT</div>
+              <div className="flex items-center gap-2 text-sm text-[#9AA39C]">
+                <span>Ask</span>
+                <ChevronRight size={14} />
+                <span>Answer</span>
+              </div>
+            </div>
+            <div className="rounded-xl border border-[#1E6B48]/50 bg-[#0E3B27]/15 p-4">
+              <div className="text-[11px] font-mono uppercase tracking-widest text-[#5CFFB0] mb-2">RI$E</div>
+              <div className="flex flex-wrap items-center gap-1.5 text-sm text-[#F2F5F2] font-medium">
+                <span>Learn</span>
+                <ChevronRight size={14} className="text-[#5CFFB0]" />
+                <span>Ask</span>
+                <ChevronRight size={14} className="text-[#5CFFB0]" />
+                <span>Practice</span>
+                <ChevronRight size={14} className="text-[#5CFFB0]" />
+                <span>Prove</span>
+                <ChevronRight size={14} className="text-[#5CFFB0]" />
+                <span>Progress</span>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-8 flex flex-col md:flex-row items-stretch gap-3">
             {[
               [BookOpen, "1. Learn", "A short lesson on the concept — PKR examples, not generic ones."],
@@ -89,19 +186,22 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* TRUST */}
+        {/* WHY TRUST RI$E — trust signals, not feature stats */}
         <section>
           <SectionLabel>Why trust RI$E</SectionLabel>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
             {[
-              ["10", "Learning modules"],
-              ["AI", "Tutor, always on"],
-              ["3", "Languages supported"],
-              ["Rs. 0", "Cost to start"],
-            ].map(([num, label]) => (
-              <div key={label} className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-5">
-                <div className="text-2xl font-black text-[#00E28A] font-mono">{num}</div>
-                <div className="text-xs text-[#9AA39C] mt-1">{label}</div>
+              [Landmark, "Built for Pakistani youth", "Not adapted from a US or UK app — designed from scratch for teens here."],
+              [PiggyBank, "Real PKR examples", "Every lesson uses local prices, local banks, local scenarios."],
+              [Languages, "English, Urdu & Roman Urdu", "Learn in whichever language actually makes sense to you."],
+              [Gift, "Free to start", "No hidden costs, no premium tier blocking the real content."],
+              [Sparkles, "Simple, beginner-friendly", "No jargon. Every concept explained the way you'd explain it to a friend."],
+            ].map(([Icon, title, body]) => (
+              <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
+                <Icon size={20} className="text-[#5CFFB0] mb-3" />
+                <div className="font-semibold">{title}</div>
+                <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
               </div>
             ))}
           </div>
@@ -110,20 +210,6 @@ export default function Landing() {
             <Pill tone="accent">Backed by research</Pill>
             <p className="mt-3 text-lg font-semibold">Not just an app — built on real research into why teen financial literacy in Pakistan is so low.</p>
             <p className="text-sm text-[#9AA39C] mt-1">That research shaped what RI$E teaches and how it teaches it.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4 mb-6">
-            {[
-              [PiggyBank, "No jargon, ever", "Every concept explained the way you'd explain it to a friend — not a textbook."],
-              [ShieldAlert, "No real money involved", "This is a learning space, not a trading app. Nothing here touches your bank account."],
-              [Landmark, "Made for Pakistan", "PKR examples, local context, and Urdu support — not translated from somewhere else."],
-            ].map(([Icon, title, body]) => (
-              <div key={title} className="p-5 rounded-xl border border-[#1E211C]">
-                <Icon size={20} className="text-[#5CFFB0] mb-3" />
-                <div className="font-semibold">{title}</div>
-                <p className="text-sm text-[#9AA39C] mt-1">{body}</p>
-              </div>
-            ))}
           </div>
 
           <div className="max-w-2xl">
