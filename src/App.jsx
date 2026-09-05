@@ -30,6 +30,7 @@ function ChallengesRoute() {
       answers={challengeAnswers}
       setAnswers={setChallengeAnswers}
       onViewCertificate={() => navigate("/certificate")}
+      onAskTutor={(topic) => navigate(`/ai?topic=${encodeURIComponent(topic)}`)}
     />
   );
 }

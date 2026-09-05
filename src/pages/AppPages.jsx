@@ -1272,7 +1272,7 @@ function ModulePage({ mod, lang, completed, onComplete, onBack, onAskTutor, rela
 
 const CERTIFICATE_THRESHOLD = 20; // minimum challenges to unlock the certificate
 
-function ChallengesPage({ userName, answers, setAnswers, onViewCertificate }) {
+function ChallengesPage({ userName, answers, setAnswers, onViewCertificate, onAskTutor }) {
   const [filter, setFilter] = useState("all");
 
   const filtered = filter === "all" ? CHALLENGES : CHALLENGES.filter((c) => c.difficulty === filter);
@@ -1364,9 +1364,19 @@ function ChallengesPage({ userName, answers, setAnswers, onViewCertificate }) {
                 })}
               </div>
               {picked !== undefined && (
-                <div className="mt-3 text-sm text-[#9AA39C] bg-[#08090A] rounded-lg p-3 border border-[#1E211C]">
-                  {c.options[picked].explain}
-                </div>
+                <>
+                  <div className="mt-3 text-sm text-[#9AA39C] bg-[#08090A] rounded-lg p-3 border border-[#1E211C]">
+                    {c.options[picked].explain}
+                  </div>
+                  {onAskTutor && (
+                    <button
+                      onClick={() => onAskTutor(c.q)}
+                      className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-[#5CFFB0] hover:text-[#00E28A]"
+                    >
+                      <Bot size={13} /> Still confused? Ask RI$E AI
+                    </button>
+                  )}
+                </>
               )}
             </div>
           );
