@@ -1048,6 +1048,7 @@ const Pill = ({ children, tone = "default" }) => {
 };
 
 import PublicShell from "../components/PublicShell";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 const SectionLabel = ({ children }) => (
   <div className="flex items-center gap-3 mb-6">
@@ -1696,6 +1697,7 @@ function ResearchPage() {
           })),
         }}
       />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "Research", path: "/research" }]} />
       <SectionLabel>Research</SectionLabel>
       <h1 className="text-3xl font-black tracking-tight mb-2">The research behind RI$E</h1>
       <p className="text-[#9AA39C] mb-8">Original research exploring financial literacy, fintech, and the future of money.</p>
@@ -1753,6 +1755,7 @@ function AboutPage() {
         description="RI$E Finance is a student-led initiative making financial education accessible to young people in Pakistan."
         path="/about"
       />
+      <Breadcrumbs items={[{ label: "Home", path: "/" }, { label: "About", path: "/about" }]} />
       <SectionLabel>About</SectionLabel>
       <h1 className="text-3xl font-black tracking-tight mb-4">A student-led initiative.</h1>
       <p className="text-[#C9D1CB] leading-relaxed">
