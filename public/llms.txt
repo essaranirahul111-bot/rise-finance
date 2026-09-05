@@ -1,0 +1,8 @@
+# RI$E Finance
+
+> RI$E Finance is a financial literacy platform for young people in Pakistan, offering interactive learning modules, an AI tutor, and practical money-management challenges.
+
+## Pages
+- [Home](https://risefinance.money/): Overview of the platform and what it offers
+- [About](https://risefinance.money/about): Mission and background
+- [Research](https://risefinance.money/research): Research on financial literacy among Pakistani youth
