@@ -22,7 +22,7 @@ export default function AdminFeedback() {
 
   if (!submissions) {
     return (
-      <div style={{ maxWidth: 400, margin: "80px auto", fontFamily: "monospace", color: "#F2F5F2" }}>
+      <div style={{ maxWidth: 400, margin: "80px auto", fontFamily: "monospace", color: "#F2F5F2", background: "#08090A", minHeight: "100vh", padding: 24 }}>
         <h2 style={{ marginBottom: 16 }}>Admin: Feedback</h2>
         <input
           type="password"
@@ -40,7 +40,7 @@ export default function AdminFeedback() {
   }
 
   return (
-    <div style={{ maxWidth: 1000, margin: "40px auto", fontFamily: "monospace", color: "#F2F5F2" }}>
+    <div style={{ maxWidth: 1000, margin: "40px auto", fontFamily: "monospace", color: "#F2F5F2", background: "#08090A", minHeight: "100vh", padding: 24 }}>
       <h2 style={{ marginBottom: 16 }}>Feedback Submissions ({submissions.length})</h2>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
