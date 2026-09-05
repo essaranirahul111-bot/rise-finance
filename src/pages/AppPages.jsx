@@ -1101,7 +1101,7 @@ function LearnPage({ completed, onOpen }) {
   return (
     <div>
       <SectionLabel>Learn</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-2">10 modules. Zero jargon.</h2>
+      <h1 className="text-3xl font-black tracking-tight mb-2">10 modules. Zero jargon.</h1>
       <p className="text-[#9AA39C] mb-8">Each one takes under 10 minutes and ends with a quick quiz.</p>
 
       <div className="grid md:grid-cols-2 gap-4">
@@ -1290,7 +1290,7 @@ function ChallengesPage({ userName, answers, setAnswers, onViewCertificate, onAs
       <SectionLabel>Daily Challenges</SectionLabel>
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-3xl font-black tracking-tight mb-2">Think fast. Learn faster.</h2>
+          <h1 className="text-3xl font-black tracking-tight mb-2">Think fast. Learn faster.</h1>
           <p className="text-[#9AA39C]">
             {CHALLENGES.length} real-world scenarios across 3 difficulty tiers{userName ? `, ${userName}` : ""}. Takes seconds each.
           </p>
@@ -1469,7 +1469,7 @@ function CertificatePage({ userName, answers, onBack }) {
     <div className="max-w-2xl">
       <button onClick={onBack} className="text-sm text-[#7C867E] hover:text-[#F2F5F2] mb-6">← Back to challenges</button>
       <SectionLabel>Certificate</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-2">Your completion certificate</h2>
+      <h1 className="text-3xl font-black tracking-tight mb-2">Your completion certificate</h1>
       <p className="text-[#9AA39C] mb-6">Download it and share it on LinkedIn or with your school.</p>
 
       <div className="bg-[#0E100E] border border-[#1E211C] rounded-xl p-4 overflow-x-auto">
@@ -1537,7 +1537,7 @@ function SurveyPage({ onBack }) {
     <div className="max-w-xl">
       <button onClick={onBack} className="text-sm text-[#7C867E] hover:text-[#F2F5F2] mb-6">← Back</button>
       <SectionLabel>Feedback</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-2">Help us improve RI$E</h2>
+      <h1 className="text-3xl font-black tracking-tight mb-2">Help us improve RI$E</h1>
       <p className="text-[#9AA39C] mb-8">A quick 5-question survey — takes under a minute.</p>
 
       <div className="space-y-5">
@@ -1600,7 +1600,7 @@ function ProgressPage({ completed, streak }) {
   return (
     <div className="max-w-2xl">
       <SectionLabel>Progress</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-6">Your learning passbook</h2>
+      <h1 className="text-3xl font-black tracking-tight mb-6">Your learning passbook</h1>
 
       <div className="bg-[#0E100E] border border-[#1E211C] rounded-2xl overflow-hidden">
         <div className="border-b border-dashed border-[#242822] px-6 py-4 flex justify-between items-center">
@@ -1681,7 +1681,7 @@ function ResearchPage() {
         path="/research"
       />
       <SectionLabel>Research</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-2">The research behind RI$E</h2>
+      <h1 className="text-3xl font-black tracking-tight mb-2">The research behind RI$E</h1>
       <p className="text-[#9AA39C] mb-8">Original research exploring financial literacy, fintech, and the future of money.</p>
 
       <div className="space-y-5">
@@ -1738,7 +1738,7 @@ function AboutPage() {
         path="/about"
       />
       <SectionLabel>About</SectionLabel>
-      <h2 className="text-3xl font-black tracking-tight mb-4">A student-led initiative.</h2>
+      <h1 className="text-3xl font-black tracking-tight mb-4">A student-led initiative.</h1>
       <p className="text-[#C9D1CB] leading-relaxed">
         RI$E Finance is a student-led initiative exploring how technology can make financial education more accessible to young people.
       </p>
