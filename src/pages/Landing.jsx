@@ -81,6 +81,8 @@ export default function Landing() {
             <span className="hidden sm:inline text-[10px] font-mono text-[#7C867E] tracking-widest uppercase ml-2">Finance</span>
           </span>
           <div className="flex items-center gap-2">
+            <Link to="/about" className="hidden sm:inline px-3 py-2 rounded-lg text-sm text-[#9AA39C] hover:text-[#F2F5F2]">About</Link>
+            <Link to="/research" className="hidden sm:inline px-3 py-2 rounded-lg text-sm text-[#9AA39C] hover:text-[#F2F5F2]">Research</Link>
             <Link to="/login" className="px-4 py-2 rounded-lg text-sm text-[#C9D1CB] hover:text-[#F2F5F2]">Log in</Link>
             <Link to="/signup" className="px-4 py-2 rounded-lg bg-[#00E28A] text-[#06110B] text-sm font-semibold">Sign up free</Link>
           </div>
@@ -261,7 +263,15 @@ export default function Landing() {
       </main>
 
       <footer className="border-t border-[#1A1D19] py-8 mt-10">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 text-xs text-[#7C867E] font-mono">MVP v0.3</div>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-5 text-sm text-[#9AA39C]">
+            <Link to="/about" className="hover:text-[#F2F5F2]">About</Link>
+            <Link to="/research" className="hover:text-[#F2F5F2]">Research</Link>
+            <Link to="/login" className="hover:text-[#F2F5F2]">Log in</Link>
+            <Link to="/signup" className="hover:text-[#F2F5F2]">Sign up</Link>
+          </div>
+          <div className="text-xs text-[#7C867E] font-mono">MVP v0.3</div>
+        </div>
       </footer>
     </div>
   );
