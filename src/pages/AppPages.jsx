@@ -1047,6 +1047,8 @@ const Pill = ({ children, tone = "default" }) => {
   );
 };
 
+import PublicShell from "../components/PublicShell";
+
 const SectionLabel = ({ children }) => (
   <div className="flex items-center gap-3 mb-6">
     <span className="text-[#5CFFB0] font-mono text-xs tracking-[0.2em] uppercase">{children}</span>
@@ -1671,6 +1673,7 @@ function ResearchPage() {
   const allTopics = ["Financial literacy", "FinTech", "Stablecoins", "Digital currencies", "Youth finance", "Pakistan's financial ecosystem"];
 
   return (
+    <PublicShell>
     <div className="max-w-2xl">
       <SEO
         title="Research — RI$E Finance"
@@ -1720,12 +1723,14 @@ function ResearchPage() {
         </div>
       </div>
     </div>
+    </PublicShell>
   );
 }
 
 
 function AboutPage() {
   return (
+    <PublicShell>
     <div className="max-w-xl">
       <SEO
         title="About — RI$E Finance"
@@ -1742,6 +1747,7 @@ function AboutPage() {
       </p>
       <p className="text-sm text-[#7C867E] mt-6">Follow us on Instagram @risefinance.ai for daily insights on money and investing. 💚</p>
     </div>
+    </PublicShell>
   );
 }
 

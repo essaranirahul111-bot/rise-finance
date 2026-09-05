@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import AdminFeedback from "./pages/AdminFeedback";
+import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ProgressProvider, useProgress } from "./context/ProgressContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -71,6 +72,8 @@ function AppRoutes() {
       <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
       <Route path="/signup" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <SignUp />} />
       <Route path="/admin-feedback" element={<AdminFeedback />} />
+      <Route path="/research" element={<ResearchPage />} />
+      <Route path="/about" element={<AboutPage />} />
 
       {/* Everything below requires an account */}
       <Route
@@ -88,9 +91,7 @@ function AppRoutes() {
                   <Route path="/certificate" element={<CertificateRoute />} />
                   <Route path="/progress" element={<ProgressRoute />} />
                   <Route path="/survey" element={<SurveyRoute />} />
-                  <Route path="/research" element={<ResearchPage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppShell>
             </ProgressProvider>
