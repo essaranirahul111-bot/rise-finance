@@ -53,11 +53,18 @@ function MiniChallenge() {
   );
 }
 
+import SEO from "../components/SEO";
+
 export default function Landing() {
   const moduleCount = MODULES.length;
 
   return (
     <div className="min-h-screen w-full bg-[#08090A] text-[#F2F5F2] font-sans">
+      <SEO
+        title="RI$E Finance — Financial Literacy for Pakistan's Youth"
+        description="Learn practical money skills through interactive lessons, an AI tutor, and real-world challenges — built for young people in Pakistan."
+        path="/"
+      />
       <header className="sticky top-0 z-30 border-b border-[#1A1D19] bg-[#08090A]/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between h-16">
           <span className="text-xl font-black tracking-tight">

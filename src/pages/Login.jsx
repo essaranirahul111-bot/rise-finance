@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import SEO from "../components/SEO";
 
 export default function Login() {
   const { signIn, signInWithGoogle } = useAuth();
@@ -39,6 +40,11 @@ export default function Login() {
 
   return (
     <div className="min-h-screen w-full bg-[#08090A] text-[#F2F5F2] flex items-center justify-center px-4">
+      <SEO
+        title="Log In — RI$E Finance"
+        description="Log in to continue your financial literacy journey with RI$E Finance."
+        path="/login"
+      />
       <div className="w-full max-w-sm">
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
           <span className="text-2xl font-black tracking-tight">

@@ -1672,6 +1672,11 @@ function ResearchPage() {
 
   return (
     <div className="max-w-2xl">
+      <SEO
+        title="Research — RI$E Finance"
+        description="Research on financial literacy among Pakistani youth, including reform proposals and analysis of stablecoins in Pakistan's economy."
+        path="/research"
+      />
       <SectionLabel>Research</SectionLabel>
       <h2 className="text-3xl font-black tracking-tight mb-2">The research behind RI$E</h2>
       <p className="text-[#9AA39C] mb-8">Original research exploring financial literacy, fintech, and the future of money.</p>
@@ -1722,6 +1727,11 @@ function ResearchPage() {
 function AboutPage() {
   return (
     <div className="max-w-xl">
+      <SEO
+        title="About — RI$E Finance"
+        description="RI$E Finance is a student-led initiative making financial education accessible to young people in Pakistan."
+        path="/about"
+      />
       <SectionLabel>About</SectionLabel>
       <h2 className="text-3xl font-black tracking-tight mb-4">A student-led initiative.</h2>
       <p className="text-[#C9D1CB] leading-relaxed">

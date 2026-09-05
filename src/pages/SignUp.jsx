@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import SEO from "../components/SEO";
 
 export default function SignUp() {
   const { signUp, signInWithGoogle } = useAuth();
@@ -47,6 +48,11 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen w-full bg-[#08090A] text-[#F2F5F2] flex items-center justify-center px-4">
+      <SEO
+        title="Sign Up — RI$E Finance"
+        description="Create a free RI$E Finance account and start learning practical money skills today."
+        path="/signup"
+      />
       <div className="w-full max-w-sm">
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
           <span className="text-2xl font-black tracking-tight">
