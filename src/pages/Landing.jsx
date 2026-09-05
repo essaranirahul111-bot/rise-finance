@@ -64,6 +64,15 @@ export default function Landing() {
         title="RI$E Finance — Financial Literacy for Pakistan's Youth"
         description="Learn practical money skills through interactive lessons, an AI tutor, and real-world challenges — built for young people in Pakistan."
         path="/"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "RI$E Finance",
+          url: "https://risefinance.money",
+          logo: "https://risefinance.money/favicon.svg",
+          description: "A student-led financial literacy platform for young people in Pakistan.",
+          sameAs: ["https://instagram.com/risefinance.ai"],
+        }}
       />
       <header className="sticky top-0 z-30 border-b border-[#1A1D19] bg-[#08090A]/95 backdrop-blur">
         <div className="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between h-16">

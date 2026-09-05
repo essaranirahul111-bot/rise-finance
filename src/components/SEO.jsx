@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-export default function SEO({ title, description, path = "" }) {
+export default function SEO({ title, description, path = "", jsonLd }) {
   const url = `https://risefinance.money${path}`;
   return (
     <Helmet>
@@ -10,6 +10,11 @@ export default function SEO({ title, description, path = "" }) {
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
+      {jsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      )}
     </Helmet>
   );
 }

@@ -1654,6 +1654,7 @@ function ResearchPage() {
       title: "Teen Financial Illiteracy in Pakistan: Causes, Consequences, and Pathways to Reform",
       author: "Rahul Kumar",
       date: "July 2026",
+      isoDate: "2026-07-01",
       abstract:
         "Examines why financial literacy remains largely absent from Pakistani school curricula despite multiple policy initiatives, identifying five structural drivers — curricular gaps, socio-economic disparity, cultural silence around money, gender inequality, and limited program reach. The paper documents real consequences including reliance on informal lending and vulnerability to fraud, then proposes a three-tier reform strategy: curriculum integration, school-based financial practice, and embedded digital tools — including a conceptual framework for an AI-assisted financial decision aid that directly shaped this app.",
       topics: ["Financial literacy", "Youth finance", "Pakistan's financial ecosystem"],
@@ -1663,6 +1664,7 @@ function ResearchPage() {
       title: "Stablecoins & the Rupee: How Digital Dollars Behave When a Currency Depreciates — A Pakistan Case Study",
       author: "Rahul Kumar",
       date: "August 2026",
+      isoDate: "2026-08-01",
       abstract:
         "Examines how stablecoins behave as the rupee depreciates, drawing on comparative evidence from Venezuela and India to show that stablecoin 'premiums' widen during both currency crises and regulatory supply shocks — functioning as a real-time gauge of liquidity access rather than pure sentiment. Applies this framework to Pakistan's emerging stablecoin and CBDC landscape, arguing the dominant use case is financial inclusion and remittance-cost reduction rather than speculation, and outlines policy implications for capturing those benefits safely.",
       topics: ["FinTech", "Stablecoins", "Digital currencies"],
@@ -1679,6 +1681,20 @@ function ResearchPage() {
         title="Research — RI$E Finance"
         description="Research on financial literacy among Pakistani youth, including reform proposals and analysis of stablecoins in Pakistan's economy."
         path="/research"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "RI$E Finance Research",
+          url: "https://risefinance.money/research",
+          hasPart: papers.map((p) => ({
+            "@type": "ScholarlyArticle",
+            headline: p.title,
+            author: { "@type": "Person", name: p.author },
+            datePublished: p.isoDate,
+            abstract: p.abstract,
+            url: `https://risefinance.money${p.file}`,
+          })),
+        }}
       />
       <SectionLabel>Research</SectionLabel>
       <h1 className="text-3xl font-black tracking-tight mb-2">The research behind RI$E</h1>
